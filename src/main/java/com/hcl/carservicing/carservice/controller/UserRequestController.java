@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.carservicing.carservice.dto.ServicingRequestDTO;
-import com.hcl.carservicing.carservice.model.ServicingRequest;
 import com.hcl.carservicing.carservice.service.ServicingRequestService;
 
 import jakarta.validation.Valid;
@@ -36,8 +35,8 @@ public class UserRequestController {
 
     // Get all servicing requests for a specific user
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<ServicingRequest>> getRequestsByUser(@PathVariable String username) {
-        List<ServicingRequest> list = service.getRequestsByUser(username);
+    public ResponseEntity<List<ServicingRequestDTO>> getRequestsByUser(@PathVariable String username) {
+        List<ServicingRequestDTO> list = service.getRequestsByUser(username);
         return ResponseEntity.ok(list);
     }
 }

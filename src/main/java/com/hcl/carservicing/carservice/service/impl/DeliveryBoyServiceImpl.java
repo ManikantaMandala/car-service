@@ -26,7 +26,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
     @Override
     @Transactional
-    public DeliveryBoy createDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
+    public DeliveryBoyDTO createDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
         // Check for existing contact number
         Optional<DeliveryBoy> existingContactNumber = deliveryBoyRepository.findByContactNumber(deliveryBoyDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
@@ -44,12 +44,14 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
         deliveryBoy.setServiceCenter(serviceCenter);
 
-        return deliveryBoyRepository.save(deliveryBoy);
+        return toDto(deliveryBoyRepository.save(deliveryBoy));
     }
+
+
 
     @Override
     @Transactional
-    public DeliveryBoy updateDeliveryBoy(Long id, DeliveryBoyDTO deliveryBoyDTO) {
+    public DeliveryBoyDTO updateDeliveryBoy(Long id, DeliveryBoyDTO deliveryBoyDTO) {
         DeliveryBoy existing = deliveryBoyRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("DeliveryBoy not found: " + id));
         existing.setName(deliveryBoyDTO.getName());
@@ -62,19 +64,19 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
         existing.setServiceCenter(serviceCenter);
 
-        return deliveryBoyRepository.save(existing);
+        return toDto(deliveryBoyRepository.save(existing));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DeliveryBoy> getDeliveryBoysByCenter(Long serviceCenterId) {
-        return deliveryBoyRepository.findByServiceCenterId(serviceCenterId);
+    public List<DeliveryBoyDTO> getDeliveryBoysByCenter(Long serviceCenterId) {
+        return deliveryBoyRepository.findByServiceCenterId(serviceCenterId).stream().map(this::toDto).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<DeliveryBoy> getAvailableDeliveryBoys() {
-        return deliveryBoyRepository.findByServicingRequestIsNull();
+    public List<DeliveryBoyDTO> getAvailableDeliveryBoys() {
+        return deliveryBoyRepository.findByServicingRequestIsNull().stream().map(this::toDto).toList();
     }
 
     private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
@@ -85,5 +87,16 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         serviceCenter.setRating(serviceCenterDTO.getRating());
         serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
         return serviceCenter;
+    }
+
+    // TODO: to have the list of ids of service request implement other toDto()
+    private DeliveryBoyDTO toDto(DeliveryBoy deliveryBoy) {
+        DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
+
+        deliveryBoyDTO.setName(deliveryBoy.getName());
+        deliveryBoyDTO.setContactNumber(deliveryBoy.getContactNumber());
+        deliveryBoyDTO.setServiceCenterId(deliveryBoy.getServiceCenter().getId());
+
+        return deliveryBoyDTO;
     }
 }

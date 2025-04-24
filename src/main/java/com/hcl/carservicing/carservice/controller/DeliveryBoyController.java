@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.carservicing.carservice.dto.DeliveryBoyDTO;
-import com.hcl.carservicing.carservice.model.DeliveryBoy;
 import com.hcl.carservicing.carservice.service.DeliveryBoyService;
 
 import jakarta.validation.Valid;
@@ -44,14 +43,14 @@ public class DeliveryBoyController {
     }
 
     @GetMapping("/center/{centerId}")
-    public ResponseEntity<List<DeliveryBoy>> byCenter(@PathVariable Long centerId) {
-        List<DeliveryBoy> list = deliveryBoyService.getDeliveryBoysByCenter(centerId);
+    public ResponseEntity<List<DeliveryBoyDTO>> byCenter(@PathVariable Long centerId) {
+        List<DeliveryBoyDTO> list = deliveryBoyService.getDeliveryBoysByCenter(centerId);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/available")
-    public ResponseEntity<List<DeliveryBoy>> available() {
-        List<DeliveryBoy> list = deliveryBoyService.getAvailableDeliveryBoys();
+    public ResponseEntity<List<DeliveryBoyDTO>> available() {
+        List<DeliveryBoyDTO> list = deliveryBoyService.getAvailableDeliveryBoys();
         return ResponseEntity.ok(list);
     }
 }
