@@ -3,6 +3,7 @@ package com.hcl.carservicing.carservice.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +47,11 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         request.setStatus(RequestStatus.PENDING);
 
         AppUser user = appUserRepository.findByUsername(requestDTO.getUsername())
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + requestDTO.getUsername()));
+            .orElseThrow(() -> new ElementNotFoundException("User not found: " + requestDTO.getUsername()));
         request.setUser(user);
 
         ServiceCenterServiceType service = serviceCenterServiceTypeRepository.findById(requestDTO.getServiceId())
-            .orElseThrow(() -> new IllegalArgumentException("Service not found: " + requestDTO.getServiceId()));
+            .orElseThrow(() -> new ElementNotFoundException("Service not found: " + requestDTO.getServiceId()));
         request.setService(service);
 
         // Retrieve the ServiceCenter from the ServiceCenterServiceType
@@ -60,7 +61,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         // Check if deliveryBoyId is provided
         if (requestDTO.getDeliveryBoyId() != null) {
             DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(requestDTO.getDeliveryBoyId())
-                .orElseThrow(() -> new IllegalArgumentException("DeliveryBoy not found: " + requestDTO.getDeliveryBoyId()));
+                .orElseThrow(() -> new ElementNotFoundException("DeliveryBoy not found: " + requestDTO.getDeliveryBoyId()));
             request.setDeliveryBoy(deliveryBoy);
         }
 
@@ -85,16 +86,18 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         servicingRequestDto.setUsername(servicingRequest.getUser().getUsername());
         servicingRequestDto.setServiceId(servicingRequest.getService().getId());
         servicingRequestDto.setServiceCenterId(servicingRequest.getServiceCenter().getId());
-        servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
+
+        if(servicingRequest.getStatus() != RequestStatus.PENDING) {
+            servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
+        }
 
         return servicingRequestDto;
     }
 
     @Override
-    @Transactional
     public ServicingRequestDTO updateRequestStatus(Long requestId, String status, Long deliveryBoyId) {
         ServicingRequest existing = repository.findById(requestId)
-            .orElseThrow(() -> new IllegalArgumentException("Request not found: " + requestId));
+            .orElseThrow(() -> new ElementNotFoundException("Request not found: " + requestId));
         existing.setStatus(RequestStatus.valueOf(status));
 
         Optional<DeliveryBoy> deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId);
