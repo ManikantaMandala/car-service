@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
-import com.hcl.carservicing.carservice.model.ServiceType;
 import com.hcl.carservicing.carservice.service.ServiceTypeService;
 
 import jakarta.validation.Valid;
@@ -43,15 +42,15 @@ public class ServiceTypeController {
 
     // Get service type by ID
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ServiceType> getById(@PathVariable Long id) {
-        ServiceType result = serviceTypeService.getServiceTypeById(id);
+    public ResponseEntity<ServiceTypeDTO> getById(@PathVariable Long id) {
+        ServiceTypeDTO result = serviceTypeService.getServiceTypeById(id);
         return ResponseEntity.ok(result);
     }
 
     // Get all service types
     @GetMapping("/getAll")
-    public ResponseEntity<List<ServiceType>> getAll() {
-        List<ServiceType> list = serviceTypeService.getAllServiceTypes();
+    public ResponseEntity<List<ServiceTypeDTO>> getAll() {
+        List<ServiceTypeDTO> list = serviceTypeService.getAllServiceTypes();
         return ResponseEntity.ok(list);
     }
 }

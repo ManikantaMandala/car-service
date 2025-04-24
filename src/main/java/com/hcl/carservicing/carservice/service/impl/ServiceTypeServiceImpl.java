@@ -20,34 +20,34 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     @Transactional
-    public ServiceType createServiceType(ServiceTypeDTO serviceTypeDTO) {
+    public ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO) {
         ServiceType serviceType = new ServiceType();
         serviceType.setServiceName(serviceTypeDTO.getServiceName());
         serviceType.setDescription(serviceTypeDTO.getDescription());
-        return serviceTypeRepository.save(serviceType);
+        return convertToDTO(serviceTypeRepository.save(serviceType));
     }
 
     @Override
     @Transactional
-    public ServiceType updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
+    public ServiceTypeDTO updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
         ServiceType existing = serviceTypeRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("ServiceType not found: " + id));
         existing.setServiceName(serviceTypeDTO.getServiceName());
         existing.setDescription(serviceTypeDTO.getDescription());
-        return serviceTypeRepository.save(existing);
+        return convertToDTO(serviceTypeRepository.save(existing));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ServiceType getServiceTypeById(Long id) {
-        return serviceTypeRepository.findById(id)
+    public ServiceTypeDTO getServiceTypeById(Long id) {
+        return serviceTypeRepository.findById(id).map(this::convertToDTO)
             .orElseThrow(() -> new IllegalArgumentException("ServiceType not found: " + id));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ServiceType> getAllServiceTypes() {
-        return serviceTypeRepository.findAll();
+    public List<ServiceTypeDTO> getAllServiceTypes() {
+        return serviceTypeRepository.findAll().stream().map(this::convertToDTO).toList();
     }
 
     @Override

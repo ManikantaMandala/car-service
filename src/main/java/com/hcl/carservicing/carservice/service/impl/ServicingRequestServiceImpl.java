@@ -39,7 +39,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
 
     @Override
     @Transactional
-    public ServicingRequest createRequest(ServicingRequestDTO requestDTO) {
+    public ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO) {
         ServicingRequest request = new ServicingRequest();
         request.setStartDate(requestDTO.getStartDate());
         request.setEndDate(requestDTO.getEndDate());
@@ -64,18 +64,35 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
             request.setDeliveryBoy(deliveryBoy);
         }
 
-        return repository.save(request);
+        return toDto(repository.save(request));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ServicingRequest> getRequestsByUser(String username) {
-        return repository.findByUserUsername(username);
+    public List<ServicingRequestDTO> getRequestsByUser(String username) {
+        List<ServicingRequest> servicingRequests = repository.findByUserUsername(username);
+
+        return servicingRequests.stream().map(this::toDto).toList();
+    }
+
+    public ServicingRequestDTO toDto(ServicingRequest servicingRequest) {
+        ServicingRequestDTO servicingRequestDto = new ServicingRequestDTO();
+
+        servicingRequestDto.setId(servicingRequest.getId());
+        servicingRequestDto.setStatus(servicingRequest.getStatus());
+        servicingRequestDto.setStartDate(servicingRequest.getStartDate());
+        servicingRequestDto.setEndDate(servicingRequest.getEndDate());
+        servicingRequestDto.setUsername(servicingRequest.getUser().getUsername());
+        servicingRequestDto.setServiceId(servicingRequest.getService().getId());
+        servicingRequestDto.setServiceCenterId(servicingRequest.getServiceCenter().getId());
+        servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
+
+        return servicingRequestDto;
     }
 
     @Override
     @Transactional
-    public ServicingRequest updateRequestStatus(Long requestId, String status, Long deliveryBoyId) {
+    public ServicingRequestDTO updateRequestStatus(Long requestId, String status, Long deliveryBoyId) {
         ServicingRequest existing = repository.findById(requestId)
             .orElseThrow(() -> new IllegalArgumentException("Request not found: " + requestId));
         existing.setStatus(RequestStatus.valueOf(status));
@@ -83,12 +100,12 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         Optional<DeliveryBoy> deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId);
         deliveryBoy.ifPresent(existing::setDeliveryBoy);
 
-        return repository.save(existing);
+        return toDto(repository.save(existing));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ServicingRequest> getAllRequests() {
-        return repository.findAll();
+    public List<ServicingRequestDTO> getAllRequests() {
+        return repository.findAll().stream().map(this::toDto).toList();
     }
 }
