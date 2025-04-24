@@ -1,5 +1,7 @@
 package com.hcl.carservicing.carservice.controller;
 
+import com.hcl.carservicing.carservice.config.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +20,12 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -33,6 +38,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String userId, @RequestParam String password) {
         userService.login(userId, password);
-        return ResponseEntity.ok("Login successfully");
+
+        String token = jwtUtil.generateToken(userId);
+        System.out.println(token);
+        return ResponseEntity.ok("Login Successfully......!");
     }
 }

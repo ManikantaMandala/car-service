@@ -10,8 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class AppUserDTO {
-	private Long id;
-	
+
     @NotBlank(message = "First Name is mandatory")
     @Size(min = 2, max = 50, message = "First Name must be between 2 and 50 characters")
     private String firstName;
@@ -47,13 +46,6 @@ public class AppUserDTO {
     
     private Boolean available = true;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Boolean getAvailable() {
 		return available;
