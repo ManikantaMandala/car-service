@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
     		});
 
         // TODO: Compare encoded passwords
+        // TODO: !Objects.equals(a, b)
     	if (!user.getPassword().equals(password)) {
     		logger.error("Invalid credentials for username: {}", userId);
     		throw new IllegalArgumentException("Invalid credentials");
@@ -76,6 +77,7 @@ public class UserServiceImpl implements UserService {
 
     	logger.info("User logged in successfully with username: {}", userId);
 
+        // TODO: why two times checking?
         if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid credentials");
         }

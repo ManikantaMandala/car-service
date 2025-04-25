@@ -42,6 +42,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     public ServiceCenterDTO updateServiceCenter(Long id, ServiceCenterDTO serviceCenterDTO) {
     	logger.info("Updating service center with ID: {}", id);
         Optional<ServiceCenter> existingServiceCenter = serviceCenterRepository.findById(id);
+        // TODO: use Optional.isEmpty() here
         if (existingServiceCenter.isPresent()) {
             ServiceCenter updatedServiceCenter = existingServiceCenter.get();
             updatedServiceCenter.setName(serviceCenterDTO.getName());
@@ -51,7 +52,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
             ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
             return convertToDTO(savedServiceCenter);
         }
-        return null; // or throw exception as needed
+        return null; // TODO: throw custom exception as needed
     }
 
     @Override
@@ -82,11 +83,10 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     	logger.info("Fetching service center with ID: {}", id);
     	return serviceCenterRepository.findById(id).map(serviceCenter -> {
     		logger.info("Service center found with ID: {}", id);
-    		return convertToDTO(serviceCenter);
-    		})
-    			.orElseGet(() -> {logger.error("Service center not found with ID: {}", id);
-    		return null; // or throw exception
-    		});
+            return convertToDTO(serviceCenter);
+        }).orElseGet(() -> {logger.error("Service center not found with ID: {}", id);
+            return null; //TODO: custom throw exception
+        });
 
     }
 

@@ -58,6 +58,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 //            throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
 //        }
 //        ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
+        // TODO: use lambda expression on Optional
         Optional<ServiceCenter> serviceCenterOptional = serviceCenterRepository.findById(deliveryBoyDTO.getServiceCenterId());
         if (serviceCenterOptional.isEmpty()) {
         	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
@@ -82,6 +83,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         existing.setName(deliveryBoyDTO.getName());
         existing.setContactNumber(deliveryBoyDTO.getContactNumber());
 
+        // TODO: remove serviceCenterService and add serviceCenterRepository
         ServiceCenterDTO serviceCenterDTO = serviceCenterService.findById(deliveryBoyDTO.getServiceCenterId());
         if (serviceCenterDTO == null) {
         	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());

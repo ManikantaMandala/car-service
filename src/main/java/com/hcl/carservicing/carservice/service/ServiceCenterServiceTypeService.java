@@ -5,6 +5,7 @@ import java.util.List;
 import com.hcl.carservicing.carservice.dto.ServiceCenterServiceTypeDTO;
 
 public interface ServiceCenterServiceTypeService {
+    // TODO: change the return type
     ServiceCenterServiceTypeDTO addServiceTypeToCenter(ServiceCenterServiceTypeDTO scstDTO);
     ServiceCenterServiceTypeDTO updateServiceCenterServiceType(Long id, ServiceCenterServiceTypeDTO scstDTO);
     List<ServiceCenterServiceTypeDTO> getByServiceCenter(Long serviceCenterId);

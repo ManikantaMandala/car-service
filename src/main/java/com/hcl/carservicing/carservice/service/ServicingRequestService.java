@@ -9,6 +9,7 @@ public interface ServicingRequestService {
     /**
      * Create a new servicing request by a user
      */
+    // TODO: remove return types
     ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO);
 
     /**

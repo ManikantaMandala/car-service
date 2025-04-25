@@ -48,6 +48,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     public ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO) {
     	logger.info("Creating servicing request for user: {}", requestDTO.getUsername());
         ServicingRequest request = new ServicingRequest();
+
         request.setStartDate(requestDTO.getStartDate());
         request.setEndDate(requestDTO.getEndDate());
         request.setStatus(RequestStatus.PENDING);
@@ -66,12 +67,13 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         	});
         request.setService(service);
 
-
         // Retrieve the ServiceCenter from the ServiceCenterServiceType
         ServiceCenter serviceCenter = service.getServiceCenter();
         request.setServiceCenter(serviceCenter);
 
         // Check if deliveryBoyId is provided
+        // TODO: write this understandable
+        // TODO: what happens when it is null
         if (requestDTO.getDeliveryBoyId() != null) {
         	DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(requestDTO.getDeliveryBoyId())
         		.orElseThrow(() -> {
@@ -93,7 +95,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     	List<ServicingRequest> servicingRequests = repository.findByUserUsername(username);
     	logger.info("Fetched {} servicing requests for user: {}", servicingRequests.size(), username);
     	return servicingRequests.stream().map(this::toDto).toList();
-
     }
 
     public ServicingRequestDTO toDto(ServicingRequest servicingRequest) {
@@ -107,6 +108,8 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         servicingRequestDto.setServiceId(servicingRequest.getService().getId());
         servicingRequestDto.setServiceCenterId(servicingRequest.getServiceCenter().getId());
 
+        // TODO: check for null first
+        // TODO: add != null last
         if (servicingRequest.getDeliveryBoy() != null) {
             servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
         } else {
@@ -147,8 +150,9 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         ServicingRequest updatedRequest = repository.save(existing);
         logger.info("Servicing request status updated successfully with ID: {}", updatedRequest.getId());
         return toDto(updatedRequest);
-}
+    }
 
+    // TODO: add loggers
     private DeliveryBoyDTO toDtoDeliveryBoy(DeliveryBoy deliveryBoy) {
         DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
 
@@ -163,11 +167,9 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     @Transactional(readOnly = true)
     public List<ServicingRequestDTO> getAllRequests() {
         logger.info("Fetching all servicing requests");
-
         List<ServicingRequest> requests = repository.findAll();
 
         logger.info("Fetched {} servicing requests", requests.size());
-
         return requests.stream().map(this::toDto).toList();
     }
 

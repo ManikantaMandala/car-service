@@ -14,6 +14,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
 	Optional<AppUser> findByContactNumber(String contactNumber);
 
+	// TODO: remove this because it is not used
 	AppUser save(AppUserDTO userDTO);
 }
 

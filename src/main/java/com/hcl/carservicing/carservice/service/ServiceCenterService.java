@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 
 public interface ServiceCenterService {
+    // TODO: remove return types
     ServiceCenterDTO createServiceCenter(ServiceCenterDTO serviceCenterDTO);
     ServiceCenterDTO updateServiceCenter(Long id, ServiceCenterDTO serviceCenterDTO);
     List<ServiceCenterDTO> getAllServiceCenters();

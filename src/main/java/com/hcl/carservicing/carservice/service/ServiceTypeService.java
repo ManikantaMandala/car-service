@@ -5,6 +5,7 @@ import java.util.List;
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
 
 public interface ServiceTypeService {
+    // TODO: remove return types
     ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO);
     ServiceTypeDTO updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO);
     ServiceTypeDTO getServiceTypeById(Long id);
