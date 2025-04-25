@@ -61,7 +61,7 @@ public class JwtUtil {
     }
 
     // Extract expiration date from the token
-    private Date extractExpiration(String token) {
+    public Date extractExpiration(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

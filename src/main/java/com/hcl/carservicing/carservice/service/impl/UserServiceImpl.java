@@ -1,7 +1,10 @@
 package com.hcl.carservicing.carservice.service.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.config.JwtUtil;
+import com.hcl.carservicing.carservice.dto.UserLoginDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
@@ -17,9 +20,11 @@ import com.hcl.carservicing.carservice.service.UserService;
 public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final AppUserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(AppUserRepository userRepository) {
+    public UserServiceImpl(AppUserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -55,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public void login(String userId, String password) {
+    public UserLoginDTO login(String userId, String password) {
     	logger.info("User login attempt with username: {}", userId);
     	AppUser user = userRepository.findByUsername(userId)
     		.orElseThrow(() -> {
@@ -74,7 +79,10 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid credentials");
         }
-        // TODO: create session if basic auth is used
-        // TODO: or generate jwt and
+
+        String jwt = jwtUtil.generateToken(userId);
+        Date expirationDate = jwtUtil.extractExpiration(jwt);
+
+        return new UserLoginDTO(jwtUtil.generateToken(userId), expirationDate);
     }
 }

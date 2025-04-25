@@ -35,7 +35,8 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
     @Override
     @Transactional
-    public DeliveryBoyDTO createDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
+//    public DeliveryBoyDTO createDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
+    public void createDeliveryBoy(DeliveryBoyDTO deliveryBoyDTO) {
     	logger.info("Creating delivery boy with contact number: {}", deliveryBoyDTO.getContactNumber());
         // Check for existing contact number
         Optional<DeliveryBoy> existingContactNumber = deliveryBoyRepository.findByContactNumber(deliveryBoyDTO.getContactNumber());
@@ -59,7 +60,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
        DeliveryBoy savedDeliveryBoy = deliveryBoyRepository.save(deliveryBoy);
        logger.info("Delivery boy created successfully with ID: {}", savedDeliveryBoy.getId());
-       return toDto(savedDeliveryBoy);
+//       return toDto(savedDeliveryBoy);
 
     }
 
