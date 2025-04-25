@@ -12,6 +12,7 @@ public interface ServiceCenterService {
     List<ServiceCenterDTO> getAllServiceCenters();
     List<ServiceCenterDTO> getAvailableServiceCenters(Boolean available);
     ServiceCenterDTO getServiceCenterById(Long id);
-    ResponseEntity<ServiceCenterDTO> updateStatusOfServiceCenter(Long id, Boolean status);
+//    ResponseEntity<ServiceCenterDTO> updateStatusOfServiceCenter(Long id, Boolean status);
+    void updateStatusOfServiceCenter(Long id, Boolean status);
     ServiceCenterDTO findById(Long serviceCenterId);
 }

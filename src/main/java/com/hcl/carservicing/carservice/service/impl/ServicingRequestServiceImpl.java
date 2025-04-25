@@ -2,9 +2,11 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,7 @@ import com.hcl.carservicing.carservice.service.ServicingRequestService;
 @Service
 public class ServicingRequestServiceImpl implements ServicingRequestService {
 	private static final Logger logger = LoggerFactory.getLogger(ServicingRequestServiceImpl.class);
-	
+
     private final ServicingRequestRepository repository;
     private final AppUserRepository appUserRepository;
     private final DeliveryBoyRepository deliveryBoyRepository;
@@ -50,18 +52,18 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         request.setStartDate(requestDTO.getStartDate());
         request.setEndDate(requestDTO.getEndDate());
         request.setStatus(RequestStatus.PENDING);
-        
+
         AppUser user = appUserRepository.findByUsername(requestDTO.getUsername())
         	.orElseThrow(() -> {
         		logger.error("User not found: {}", requestDTO.getUsername());
-        		return new IllegalArgumentException("User not found: " + requestDTO.getUsername());
+        		return new ElementNotFoundException("User not found: " + requestDTO.getUsername());
         	});
         request.setUser(user);
-        
+
         ServiceCenterServiceType service = serviceCenterServiceTypeRepository.findById(requestDTO.getServiceId())
         	.orElseThrow(() -> {
         		logger.error("Service not found: {}", requestDTO.getServiceId());
-        		return new IllegalArgumentException("Service not found: " + requestDTO.getServiceId());
+        		return new ElementNotFoundException("Service not found: " + requestDTO.getServiceId());
         	});
         request.setService(service);
 
@@ -75,15 +77,14 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         	DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(requestDTO.getDeliveryBoyId())
         		.orElseThrow(() -> {
         			logger.error("DeliveryBoy not found: {}", requestDTO.getDeliveryBoyId());
-        			return new IllegalArgumentException("DeliveryBoy not found: " + requestDTO.getDeliveryBoyId());
+        			return new ElementNotFoundException("DeliveryBoy not found: " + requestDTO.getDeliveryBoyId());
         		});
         	request.setDeliveryBoy(deliveryBoy);
         }
-        
+
         ServicingRequest savedRequest = repository.save(request);
         logger.info("Servicing request created successfully with ID: {}", savedRequest.getId());
         return toDto(savedRequest);
-
     }
 
     @Override
@@ -124,45 +125,35 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     	ServicingRequest existing = repository.findById(requestId)
     		.orElseThrow(() -> {
     			logger.error("Request not found: {}", requestId);
-    			return new IllegalArgumentException("Request not found: " + requestId);
+    			return new ElementNotFoundException("Request not found: " + requestId);
     		});
 
-        if (RequestStatus.ACCEPTED.name().equals(status) && deliveryBoyId == null) {
+        existing.setStatus(RequestStatus.valueOf(status));
+
+        if (deliveryBoyId == null) {
         	logger.error("DeliveryBoyId must be provided when status is ACCEPTED");
         	throw new IllegalArgumentException("DeliveryBoyId must be provided when status is ACCEPTED");
         }
-        
-        existing.setStatus(RequestStatus.valueOf(status));
 
+        // TODO: create a strategy to allocate the deliveryBoy without admin specifying deliveryBoyId
+        Optional<DeliveryBoy> deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId);
 
-        if (deliveryBoyId != null) {
-        	DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId)
-        		.orElseThrow(() -> {
-        			logger.error("DeliveryBoy not found: {}", deliveryBoyId);
-        			return new IllegalArgumentException("DeliveryBoy not found: " + deliveryBoyId);
-        		});
-        	
-        existing.setDeliveryBoy(deliveryBoy);
-
-            
-            // Assuming DeliveryBoyDTO has a method setServiceRequestsId
-            DeliveryBoyDTO deliveryBoyDTO = toDtoDeliveyBoy(deliveryBoy);
-            List<Long> serviceRequestsIds = deliveryBoyDTO.getServiceRequestsId();
-            if (serviceRequestsIds == null) {
-                serviceRequestsIds = new ArrayList<>();
+        deliveryBoy.ifPresentOrElse(existing::setDeliveryBoy, () -> {
+            // TODO: can I do Predicate here
+            if (existing.getStatus() == RequestStatus.ACCEPTED) {
+                throw new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId);
             }
-            serviceRequestsIds.add(requestId);
-            deliveryBoyDTO.setServiceRequestsId(serviceRequestsIds);
-        }
-        
+            // TODO: think about this, for other type of requests what to do?
+        });
+        existing.setDeliveryBoy(deliveryBoy.get());
+
         ServicingRequest updatedRequest = repository.save(existing);
         logger.info("Servicing request status updated successfully with ID: {}", updatedRequest.getId());
         return toDto(updatedRequest);
+}
 
-    }
-    
     private DeliveryBoyDTO toDtoDeliveyBoy(DeliveryBoy deliveryBoy) {
-    	DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
+        DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
 
         deliveryBoyDTO.setName(deliveryBoy.getName());
         deliveryBoyDTO.setContactNumber(deliveryBoy.getContactNumber());
@@ -174,10 +165,13 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     @Override
     @Transactional(readOnly = true)
     public List<ServicingRequestDTO> getAllRequests() {
-    	logger.info("Fetching all servicing requests");
-    	List<ServicingRequest> requests = repository.findAll();
-    	logger.info("Fetched {} servicing requests", requests.size());
-    	return requests.stream().map(this::toDto).toList();
+        logger.info("Fetching all servicing requests");
 
+        List<ServicingRequest> requests = repository.findAll();
+
+        logger.info("Fetched {} servicing requests", requests.size());
+
+        return requests.stream().map(this::toDto).toList();
     }
+
 }

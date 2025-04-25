@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import com.hcl.carservicing.carservice.service.ServiceCenterService;
 public class ServiceCenterServiceImpl implements ServiceCenterService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceImpl.class);
-	
+
     private final ServiceCenterRepository serviceCenterRepository;
 
     public ServiceCenterServiceImpl(ServiceCenterRepository serviceCenterRepository) {
@@ -48,12 +49,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
             updatedServiceCenter.setRating(serviceCenterDTO.getRating());
             updatedServiceCenter.setAvailable(serviceCenterDTO.getAvailable());
             ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
-            logger.info("Service center updated successfully with ID: {}", savedServiceCenter.getId());
             return convertToDTO(savedServiceCenter);
-        } else {
-        	logger.error("Service center not found with ID: {}", id);
-        	return null; // or throw exception as needed
         }
+        return null; // or throw exception as needed
     }
 
     @Override
@@ -61,6 +59,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     	logger.info("Fetching all service centers");
         List<ServiceCenter> serviceCenters = serviceCenterRepository.findAll();
         logger.info("Fetched {} service centers", serviceCenters.size());
+
         return serviceCenters.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -71,6 +70,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     	logger.info("Fetching service centers with availability: {}", available);
         List<ServiceCenter> serviceCenters = serviceCenterRepository.findByAvailable(available);
         logger.info("Fetched {} service centers with availability: {}", serviceCenters.size(), available);
+
         return serviceCenters.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -78,6 +78,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
     @Override
     public ServiceCenterDTO getServiceCenterById(Long id) {
+        // TODO: Custom exception
     	logger.info("Fetching service center with ID: {}", id);
     	return serviceCenterRepository.findById(id).map(serviceCenter -> {
     		logger.info("Service center found with ID: {}", id);
@@ -89,21 +90,23 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
     }
 
+//    public ResponseEntity<ServiceCenterDTO> updateStatusOfServiceCenter(Long id, Boolean status) {
     @Override
-    public ResponseEntity<ServiceCenterDTO> updateStatusOfServiceCenter(Long id, Boolean status) {
-    	logger.info("Updating status of service center with ID: {}", id);
+    public void updateStatusOfServiceCenter(Long id, Boolean status) {
         Optional<ServiceCenter> existingServiceCenter = serviceCenterRepository.findById(id);
-        if (existingServiceCenter.isPresent()) {
-            ServiceCenter updatedServiceCenter = existingServiceCenter.get();
-            updatedServiceCenter.setAvailable(status);
-            ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
-            logger.info("Service center status updated successfully with ID: {}", savedServiceCenter.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedServiceCenter));
-        } else {
-        	logger.error("Service center not found with ID: {}", id);
-        	return null;
+
+        if (existingServiceCenter.isEmpty()) {
+            logger.error("Service center not found with ID: {}", id);
+            throw new ElementNotFoundException("Service center not found: " + id);
         }
 
+        ServiceCenter updatedServiceCenter = existingServiceCenter.get();
+        updatedServiceCenter.setAvailable(status);
+
+//        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
+        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
+        logger.info("Service center status updated successfully with ID: {}", savedServiceCenter.getId());
+//        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedServiceCenter));
     }
 
     @Override
@@ -119,14 +122,15 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     			});
     }
 
-
     private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
         ServiceCenter serviceCenter = new ServiceCenter();
+
         serviceCenter.setId(serviceCenterDTO.getId());
         serviceCenter.setName(serviceCenterDTO.getName());
         serviceCenter.setAddress(serviceCenterDTO.getAddress());
         serviceCenter.setRating(serviceCenterDTO.getRating());
         serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
+
         return serviceCenter;
     }
 
@@ -138,7 +142,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         scstDTO.setCost(serviceType.getCost());
         return scstDTO;
     }
-    
+
     private ServiceCenterDTO convertToDTO(ServiceCenter serviceCenter) {
         ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
         serviceCenterDTO.setId(serviceCenter.getId());
@@ -156,5 +160,5 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
         return serviceCenterDTO;
     }
-    
+
 }

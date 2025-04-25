@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,9 @@ import com.hcl.carservicing.carservice.service.ServiceCenterService;
 
 @Service
 public class DeliveryBoyServiceImpl implements DeliveryBoyService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DeliveryBoyServiceImpl.class);
-	
+
     private final DeliveryBoyRepository deliveryBoyRepository;
     private final ServiceCenterService serviceCenterService;
 
@@ -39,7 +41,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         Optional<DeliveryBoy> existingContactNumber = deliveryBoyRepository.findByContactNumber(deliveryBoyDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
         	logger.error("Contact number already exists: {}", deliveryBoyDTO.getContactNumber());
-            throw new IllegalArgumentException("Contact Number already exists: " + deliveryBoyDTO.getContactNumber());
+            throw new ElementAlreadyExistException("Contact Number already exists: " + deliveryBoyDTO.getContactNumber());
         }
 
         DeliveryBoy deliveryBoy = new DeliveryBoy();
@@ -67,8 +69,8 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
     	logger.info("Updating delivery boy with ID: {}", id);
         DeliveryBoy existing = deliveryBoyRepository.findById(id).orElseThrow(() -> {
         	logger.error("Delivery boy not found with ID: {}", id);
-        	return new IllegalArgumentException("DeliveryBoy not found: " + id);
-        	});
+            return new ElementNotFoundException("DeliveryBoy not found: " + id);
+        });
 
         existing.setName(deliveryBoyDTO.getName());
         existing.setContactNumber(deliveryBoyDTO.getContactNumber());
@@ -80,18 +82,17 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         }
         ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
         existing.setServiceCenter(serviceCenter);
-        
+
         DeliveryBoy updatedDeliveryBoy = deliveryBoyRepository.save(existing);
         logger.info("Delivery boy updated successfully with ID: {}", updatedDeliveryBoy.getId());
         return toDto(updatedDeliveryBoy);
-
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<DeliveryBoyDTO> getDeliveryBoysByCenter(Long serviceCenterId) {
     	logger.info("Fetching delivery boys for service center ID: {}", serviceCenterId);
-    	
+
     	List<DeliveryBoyDTO> deliveryBoys = deliveryBoyRepository.findByServiceCenterId(serviceCenterId).stream().map(this::toDto).toList();
     	logger.info("Fetched {} delivery boys for service center ID: {}", deliveryBoys.size(), serviceCenterId);
     	return deliveryBoys;
@@ -109,11 +110,13 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
     private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
         ServiceCenter serviceCenter = new ServiceCenter();
+
         serviceCenter.setId(serviceCenterDTO.getId());
         serviceCenter.setName(serviceCenterDTO.getName());
         serviceCenter.setAddress(serviceCenterDTO.getAddress());
         serviceCenter.setRating(serviceCenterDTO.getRating());
         serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
+
         return serviceCenter;
     }
 

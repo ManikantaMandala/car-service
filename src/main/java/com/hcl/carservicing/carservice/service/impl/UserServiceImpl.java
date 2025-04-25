@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +30,13 @@ public class UserServiceImpl implements UserService {
         Optional<AppUser> existing = userRepository.findByUsername(userDTO.getUsername());
         if (existing.isPresent()) {
         	logger.error("Username already exists: {}", userDTO.getUsername());
-            throw new IllegalArgumentException("Username already exists: " + userDTO.getUsername());
+            throw new ElementAlreadyExistException("Username already exists: " + userDTO.getUsername());
         }
         // Check for existing contact number
         Optional<AppUser> existingContactNumber = userRepository.findByContactNumber(userDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
         	logger.error("Contact Number already exists: {}", userDTO.getContactNumber());
-            throw new IllegalArgumentException("Contact Number already exists: " + userDTO.getContactNumber());
+            throw new ElementAlreadyExistException("Contact Number already exists: " + userDTO.getContactNumber());
         }
 
         AppUser user = new AppUser();
@@ -67,8 +68,13 @@ public class UserServiceImpl implements UserService {
     		logger.error("Invalid credentials for username: {}", userId);
     		throw new IllegalArgumentException("Invalid credentials");
     	}
-    	
+
     	logger.info("User logged in successfully with username: {}", userId);
 
+        if (!user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+        // TODO: create session if basic auth is used
+        // TODO: or generate jwt and
     }
 }

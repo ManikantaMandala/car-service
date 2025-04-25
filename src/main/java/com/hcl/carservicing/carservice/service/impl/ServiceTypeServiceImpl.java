@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     public ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
         ServiceType serviceType = new ServiceType();
+
         serviceType.setServiceName(serviceTypeDTO.getServiceName());
         serviceType.setDescription(serviceTypeDTO.getDescription());
         ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
@@ -41,13 +43,16 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     	ServiceType existing = serviceTypeRepository.findById(id)
     			.orElseThrow(() -> {
     				logger.error("Service type not found with ID: {}", id);
-    				return new IllegalArgumentException("ServiceType not found: " + id);
+    				return new ElementNotFoundException("ServiceType not found: " + id);
     			});
 
         existing.setServiceName(serviceTypeDTO.getServiceName());
         existing.setDescription(serviceTypeDTO.getDescription());
+
         ServiceType savedServiceType = serviceTypeRepository.save(existing);
+
         logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
+
         return convertServiceTypeToDTO(savedServiceType);
 
     }
@@ -62,7 +67,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     				return convertServiceTypeToDTO(serviceType);
     		}).orElseThrow(() -> {
     			logger.error("Service type not found with ID: {}", id);
-    			return new IllegalArgumentException("ServiceType not found: " + id);
+    			return new ElementNotFoundException("ServiceType not found: " + id);
     		});
 
     }
@@ -84,7 +89,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     	ServiceType serviceType = serviceTypeRepository.findById(id)
     			.orElseThrow(() -> {
     				logger.error("Service type not found with ID: {}", id);
-    				return new IllegalArgumentException("ServiceType not found: " + id);
+    				return new ElementNotFoundException("ServiceType not found: " + id);
     			});
     	logger.info("Service type found with ID: {}", id);
     	return convertServiceTypeToDTO(serviceType);
