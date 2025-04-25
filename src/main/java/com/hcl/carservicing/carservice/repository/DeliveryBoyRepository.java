@@ -14,6 +14,5 @@ public interface DeliveryBoyRepository extends JpaRepository<DeliveryBoy, Long> 
     List<DeliveryBoy> findByServiceCenterId(Long serviceCenterId);
     List<DeliveryBoy> findByServicingRequestIsNull();
 	Optional<DeliveryBoy> findByContactNumber(String contactNumber);
-	DeliveryBoy save(DeliveryBoyDTO deliveryBoyDTO);
 }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
@@ -27,10 +28,12 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
     private final DeliveryBoyRepository deliveryBoyRepository;
     private final ServiceCenterService serviceCenterService;
+    private final ServiceCenterRepository serviceCenterRepository;
 
-    public DeliveryBoyServiceImpl(DeliveryBoyRepository deliveryBoyRepository, ServiceCenterService serviceCenterService) {
+    public DeliveryBoyServiceImpl(DeliveryBoyRepository deliveryBoyRepository, ServiceCenterService serviceCenterService, ServiceCenterRepository serviceCenterRepository) {
         this.deliveryBoyRepository = deliveryBoyRepository;
         this.serviceCenterService = serviceCenterService;
+        this.serviceCenterRepository = serviceCenterRepository;
     }
 
     @Override
@@ -49,19 +52,22 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         deliveryBoy.setName(deliveryBoyDTO.getName());
         deliveryBoy.setContactNumber(deliveryBoyDTO.getContactNumber());
 
-        ServiceCenterDTO serviceCenterDTO = serviceCenterService.findById(deliveryBoyDTO.getServiceCenterId());
-        if (serviceCenterDTO == null) {
+//        ServiceCenterDTO serviceCenterDTO = serviceCenterService.findById(deliveryBoyDTO.getServiceCenterId());
+//        if (serviceCenterDTO == null) {
+//        	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
+//            throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
+//        }
+//        ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
+        Optional<ServiceCenter> serviceCenterOptional = serviceCenterRepository.findById(deliveryBoyDTO.getServiceCenterId());
+        if (serviceCenterOptional.isEmpty()) {
         	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
             throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
         }
-        ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
-        deliveryBoy.setServiceCenter(serviceCenter);
+        deliveryBoy.setServiceCenter(serviceCenterOptional.get());
 
-
-       DeliveryBoy savedDeliveryBoy = deliveryBoyRepository.save(deliveryBoy);
-       logger.info("Delivery boy created successfully with ID: {}", savedDeliveryBoy.getId());
+        DeliveryBoy savedDeliveryBoy = deliveryBoyRepository.save(deliveryBoy);
+        logger.info("Delivery boy created successfully with ID: {}", savedDeliveryBoy.getId());
 //       return toDto(savedDeliveryBoy);
-
     }
 
     @Override
