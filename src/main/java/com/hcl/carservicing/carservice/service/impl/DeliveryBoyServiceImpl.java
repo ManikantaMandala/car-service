@@ -100,6 +100,10 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
     public List<DeliveryBoyDTO> getDeliveryBoysByCenter(Long serviceCenterId) {
     	logger.info("Fetching delivery boys for service center ID: {}", serviceCenterId);
 
+        if(serviceCenterId == null || serviceCenterId < 1) {
+            throw new IllegalArgumentException("service center id: {}", null);
+        }
+
     	List<DeliveryBoyDTO> deliveryBoys = deliveryBoyRepository.findByServiceCenterId(serviceCenterId).stream().map(this::toDto).toList();
     	logger.info("Fetched {} delivery boys for service center ID: {}", deliveryBoys.size(), serviceCenterId);
     	return deliveryBoys;
@@ -109,10 +113,11 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
     @Transactional(readOnly = true)
     public List<DeliveryBoyDTO> getAvailableDeliveryBoys() {
     	logger.info("Fetching available delivery boys");
+
     	List<DeliveryBoyDTO> availableDeliveryBoys = deliveryBoyRepository.findByServicingRequestIsNull().stream().map(this::toDto).toList();
+
     	logger.info("Fetched {} available delivery boys", availableDeliveryBoys.size());
     	return availableDeliveryBoys;
-
     }
 
     private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {

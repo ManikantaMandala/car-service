@@ -1,6 +1,5 @@
 package com.hcl.carservicing.carservice.controller;
 
-import com.hcl.carservicing.carservice.controller.ServiceCenterController;
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.service.ServiceCenterService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 class ServiceCenterControllerTest {
@@ -35,7 +36,7 @@ class ServiceCenterControllerTest {
 		// Arrange
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("Test Center");
-		serviceCenterDTO.setLocation("Test Location");
+		serviceCenterDTO.setAddress("test_address");
 
 		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.addServiceCenter(serviceCenterDTO);
@@ -66,7 +67,7 @@ class ServiceCenterControllerTest {
 		// Arrange
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("");
-		serviceCenterDTO.setLocation("Test Location");
+		serviceCenterDTO.setAddress("test_address");
 
 		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.addServiceCenter(serviceCenterDTO);
@@ -83,7 +84,7 @@ class ServiceCenterControllerTest {
 		Long id = 1L;
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("Updated Center");
-		serviceCenterDTO.setLocation("Updated Location");
+		serviceCenterDTO.setAddress("test_address");
 
 		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateServiceCenter(id, serviceCenterDTO);
@@ -116,7 +117,7 @@ class ServiceCenterControllerTest {
 		Long id = 1L;
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("");
-		serviceCenterDTO.setLocation("Location");
+		serviceCenterDTO.setAddress("test_address");
 
 		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateServiceCenter(id, serviceCenterDTO);
@@ -132,14 +133,19 @@ class ServiceCenterControllerTest {
 		// Arrange
 		List<ServiceCenterDTO> centers = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
+
 		center1.setId(1L);
 		center1.setName("Center 1");
-		center1.setLocation("Location 1");
+		center1.setAddress("test_address_1");
+
 		centers.add(center1);
+
 		ServiceCenterDTO center2 = new ServiceCenterDTO();
+
 		center2.setId(2L);
 		center2.setName("Center 2");
-		center2.setLocation("Location 2");
+		center1.setAddress("test_address_2");
+
 		centers.add(center2);
 
 		when(serviceCenterService.getAllServiceCenters()).thenReturn(centers);
@@ -173,9 +179,11 @@ class ServiceCenterControllerTest {
 		// Arrange
 		List<ServiceCenterDTO> centers = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
+
 		center1.setId(1L);
 		center1.setName("Center 1");
-		center1.setLocation("Location 1");
+		center1.setAddress("test_address_1");
+
 		centers.add(center1);
 
 		when(serviceCenterService.getAllServiceCenters()).thenReturn(centers);
@@ -194,9 +202,11 @@ class ServiceCenterControllerTest {
 		// Arrange
 		List<ServiceCenterDTO> availableCenters = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
+
 		center1.setId(1L);
 		center1.setName("Center 1");
 		center1.setAvailable(true);
+
 		availableCenters.add(center1);
 
 		when(serviceCenterService.getAvailableServiceCenters(true)).thenReturn(availableCenters);
@@ -233,7 +243,6 @@ class ServiceCenterControllerTest {
 		verify(serviceCenterService, times(1)).getAvailableServiceCenters(false);
 	}
 
-	
 	@Test
 	void testGetServiceCenterById_ExistingCenter() {
 		// Arrange
@@ -241,7 +250,7 @@ class ServiceCenterControllerTest {
 		ServiceCenterDTO center = new ServiceCenterDTO();
 		center.setId(id);
 		center.setName("Test Center");
-		center.setLocation("Test Location");
+		center.setAddress("Test Location");
 
 		when(serviceCenterService.getServiceCenterById(id)).thenReturn(center);
 
@@ -265,7 +274,7 @@ class ServiceCenterControllerTest {
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-		assertEquals(null, responseEntity.getBody());
+		assertNull(responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getServiceCenterById(id);
 	}
 
@@ -276,7 +285,7 @@ class ServiceCenterControllerTest {
 		ServiceCenterDTO center = new ServiceCenterDTO();
 		center.setId(id);
 		center.setName("Another Center");
-		center.setLocation("Another Location");
+		center.setAddress("Another Location");
 
 		when(serviceCenterService.getServiceCenterById(id)).thenReturn(center);
 

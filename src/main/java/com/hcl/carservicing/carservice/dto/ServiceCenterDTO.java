@@ -95,10 +95,4 @@ public class ServiceCenterDTO {
     public void setAvailable(Boolean available) {
         this.available = available;
     }
-
-	public void setLocation(String string) {
-		// TODO Auto-generated method stub
-		this.Id = Id;
-		
-	}
 }

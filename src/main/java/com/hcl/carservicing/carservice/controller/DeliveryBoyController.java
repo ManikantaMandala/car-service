@@ -46,8 +46,8 @@ public class DeliveryBoyController {
         logger.info("Updating delivery boy with ID: {}, New details: {}", id, deliveryBoyDTO);
         deliveryBoyService.updateDeliveryBoy(id, deliveryBoyDTO);
         logger.info("Delivery boy updated successfully with ID: {}, New details: {}", id, deliveryBoyDTO);
-        return ResponseEntity.ok("Delivery boy updated successfully");
 
+        return ResponseEntity.ok("Delivery boy updated successfully");
     }
 
     @GetMapping("/center/{centerId}")
@@ -55,8 +55,8 @@ public class DeliveryBoyController {
         logger.info("Fetching delivery boys for service center ID: {}", centerId);
         List<DeliveryBoyDTO> list = deliveryBoyService.getDeliveryBoysByCenter(centerId);
         logger.info("Fetched {} delivery boys for service center ID: {}", list.size(), centerId);
-        return ResponseEntity.ok(list);
 
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/available")

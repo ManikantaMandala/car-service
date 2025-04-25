@@ -21,6 +21,15 @@ public class DeliveryBoyDTO {
 
 	private List<Long> serviceRequestsId;
 
+	public DeliveryBoyDTO() { }
+
+	public DeliveryBoyDTO(String name, String contactNumber, Long serviceCenterId, List<Long> serviceRequestsId) {
+		this.name = name;
+		this.contactNumber = contactNumber;
+		this.serviceCenterId = serviceCenterId;
+		this.serviceRequestsId = serviceRequestsId;
+	}
+
 	public List<Long> getServiceRequestsId() {
 		return serviceRequestsId;
 	}

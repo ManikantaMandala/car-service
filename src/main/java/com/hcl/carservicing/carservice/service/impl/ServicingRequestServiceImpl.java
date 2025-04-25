@@ -1,6 +1,5 @@
 package com.hcl.carservicing.carservice.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,20 +138,18 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         Optional<DeliveryBoy> deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId);
 
         deliveryBoy.ifPresentOrElse(existing::setDeliveryBoy, () -> {
-            // TODO: can I do Predicate here
             if (existing.getStatus() == RequestStatus.ACCEPTED) {
                 throw new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId);
             }
             // TODO: think about this, for other type of requests what to do?
         });
-        existing.setDeliveryBoy(deliveryBoy.get());
 
         ServicingRequest updatedRequest = repository.save(existing);
         logger.info("Servicing request status updated successfully with ID: {}", updatedRequest.getId());
         return toDto(updatedRequest);
 }
 
-    private DeliveryBoyDTO toDtoDeliveyBoy(DeliveryBoy deliveryBoy) {
+    private DeliveryBoyDTO toDtoDeliveryBoy(DeliveryBoy deliveryBoy) {
         DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
 
         deliveryBoyDTO.setName(deliveryBoy.getName());
