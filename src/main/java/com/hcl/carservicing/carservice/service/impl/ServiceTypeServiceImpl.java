@@ -2,6 +2,7 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
 
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +23,10 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional
     public ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO) {
         ServiceType serviceType = new ServiceType();
+
         serviceType.setServiceName(serviceTypeDTO.getServiceName());
         serviceType.setDescription(serviceTypeDTO.getDescription());
+
         return convertToDTO(serviceTypeRepository.save(serviceType));
     }
 
@@ -31,7 +34,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional
     public ServiceTypeDTO updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
         ServiceType existing = serviceTypeRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ServiceType not found: " + id));
+            .orElseThrow(() -> new ElementNotFoundException("Service type not found: " + id));
         existing.setServiceName(serviceTypeDTO.getServiceName());
         existing.setDescription(serviceTypeDTO.getDescription());
         return convertToDTO(serviceTypeRepository.save(existing));
@@ -41,7 +44,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional(readOnly = true)
     public ServiceTypeDTO getServiceTypeById(Long id) {
         return serviceTypeRepository.findById(id).map(this::convertToDTO)
-            .orElseThrow(() -> new IllegalArgumentException("ServiceType not found: " + id));
+            .orElseThrow(() -> new ElementNotFoundException("Service type not found: " + id));
     }
 
     @Override
@@ -54,7 +57,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional(readOnly = true)
     public ServiceTypeDTO findById(Long id) {
         ServiceType serviceType = serviceTypeRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ServiceType not found: " + id));
+            .orElseThrow(() -> new ElementNotFoundException("Service type not found: " + id));
         return convertToDTO(serviceType);
     }
 

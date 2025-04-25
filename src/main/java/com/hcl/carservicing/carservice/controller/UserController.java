@@ -34,6 +34,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
+    // TODO: change the request param of both userId and password
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam String userId, @RequestParam String password) {
         userService.login(userId, password);

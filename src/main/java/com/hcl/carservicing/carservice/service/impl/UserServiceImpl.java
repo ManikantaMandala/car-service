@@ -2,6 +2,7 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +25,12 @@ public class UserServiceImpl implements UserService {
         // Check for existing username
         Optional<AppUser> existing = userRepository.findByUsername(userDTO.getUsername());
         if (existing.isPresent()) {
-            throw new IllegalArgumentException("Username already exists: " + userDTO.getUsername());
+            throw new ElementAlreadyExistException("Username already exists: " + userDTO.getUsername());
         }
         // Check for existing contact number
         Optional<AppUser> existingContactNumber = userRepository.findByContactNumber(userDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
-            throw new IllegalArgumentException("Contact Number already exists: " + userDTO.getContactNumber());
+            throw new ElementAlreadyExistException("Contact Number already exists: " + userDTO.getContactNumber());
         }
 
         AppUser user = new AppUser();
@@ -54,5 +55,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid credentials");
         }
+        // TODO: create session if basic auth is used
+        // TODO: or generate jwt and
     }
 }

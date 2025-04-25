@@ -3,6 +3,8 @@ package com.hcl.carservicing.carservice.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
+import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         // Check for existing contact number
         Optional<DeliveryBoy> existingContactNumber = deliveryBoyRepository.findByContactNumber(deliveryBoyDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
-            throw new IllegalArgumentException("Contact Number already exists: " + deliveryBoyDTO.getContactNumber());
+            throw new ElementAlreadyExistException("Contact Number already exists: " + deliveryBoyDTO.getContactNumber());
         }
 
         DeliveryBoy deliveryBoy = new DeliveryBoy();
@@ -53,7 +55,7 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
     @Transactional
     public DeliveryBoyDTO updateDeliveryBoy(Long id, DeliveryBoyDTO deliveryBoyDTO) {
         DeliveryBoy existing = deliveryBoyRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("DeliveryBoy not found: " + id));
+            .orElseThrow(() -> new ElementNotFoundException("DeliveryBoy not found: " + id));
         existing.setName(deliveryBoyDTO.getName());
         existing.setContactNumber(deliveryBoyDTO.getContactNumber());
 
@@ -81,11 +83,13 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 
     private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
         ServiceCenter serviceCenter = new ServiceCenter();
+
         serviceCenter.setId(serviceCenterDTO.getId());
         serviceCenter.setName(serviceCenterDTO.getName());
         serviceCenter.setAddress(serviceCenterDTO.getAddress());
         serviceCenter.setRating(serviceCenterDTO.getRating());
         serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
+
         return serviceCenter;
     }
 
