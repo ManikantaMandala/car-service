@@ -100,8 +100,22 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
             .orElseThrow(() -> new ElementNotFoundException("Request not found: " + requestId));
         existing.setStatus(RequestStatus.valueOf(status));
 
+        // TODO: create a strategy to allocate the deliveryBoy without admin specifying deliveryBoyId
         Optional<DeliveryBoy> deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId);
-        deliveryBoy.ifPresent(existing::setDeliveryBoy);
+
+//        if (deliveryBoy.isEmpty() && existing.getStatus() == RequestStatus.ACCEPTED) {
+//            throw new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId);
+//        }
+//        deliveryBoy.ifPresent(existing::setDeliveryBoy);
+//        existing.setDeliveryBoy(deliveryBoy.get());
+
+        deliveryBoy.ifPresentOrElse(existing::setDeliveryBoy, () -> {
+            // TODO: can I do Predicate here
+            if (existing.getStatus() == RequestStatus.ACCEPTED) {
+                throw new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId);
+            }
+            // TODO: think about this, for other type of requests what to do?
+        });
 
         return toDto(repository.save(existing));
     }
