@@ -87,7 +87,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         ServiceCenter updatedServiceCenter = existingServiceCenter.get();
         updatedServiceCenter.setAvailable(status);
 
-        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
+//        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
+        serviceCenterRepository.save(updatedServiceCenter);
 //        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedServiceCenter));
     }
 
