@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hcl.carservicing.carservice.model.ServicingRequest;
+import com.hcl.carservicing.carservice.dto.ServicingRequestDTO;
 import com.hcl.carservicing.carservice.service.ServiceCenterService;
 import com.hcl.carservicing.carservice.service.ServicingRequestService;
 
@@ -40,8 +40,8 @@ public class AdminRequestController {
 
     // Get all servicing requests (admin view)
     @GetMapping("/getAllServiceRequests")
-    public ResponseEntity<List<ServicingRequest>> getAll() {
-        List<ServicingRequest> list = servicingRequestService.getAllRequests();
+    public ResponseEntity<List<ServicingRequestDTO>> getAll() {
+        List<ServicingRequestDTO> list = servicingRequestService.getAllRequests();
         return ResponseEntity.ok(list);
     }
 

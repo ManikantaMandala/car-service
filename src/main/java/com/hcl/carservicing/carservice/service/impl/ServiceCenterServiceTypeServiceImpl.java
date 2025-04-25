@@ -3,6 +3,8 @@ package com.hcl.carservicing.carservice.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,9 @@ import com.hcl.carservicing.carservice.service.ServiceTypeService;
 
 @Service
 public class ServiceCenterServiceTypeServiceImpl implements ServiceCenterServiceTypeService {
+
+	private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceTypeServiceImpl.class);
+
     private final ServiceCenterServiceTypeRepository repository;
     private final ServiceCenterService serviceCenterService;
     private final ServiceTypeService serviceTypeService;
@@ -34,27 +39,39 @@ public class ServiceCenterServiceTypeServiceImpl implements ServiceCenterService
     @Override
     @Transactional
     public ServiceCenterServiceTypeDTO addServiceTypeToCenter(ServiceCenterServiceTypeDTO scstDTO) {
+    	logger.info("Adding service type to service center with ID: {}", scstDTO.getServiceCenterId());
         ServiceCenterServiceType scst = convertToEntity(scstDTO);
         ServiceCenterServiceType savedScst = repository.save(scst);
+        logger.info("Service type added successfully with ID: {}", savedScst.getId());
         return convertToDTO(savedScst);
+
     }
 
     @Override
     @Transactional
     public ServiceCenterServiceTypeDTO updateServiceCenterServiceType(Long id, ServiceCenterServiceTypeDTO scstDTO) {
-        ServiceCenterServiceType existing = repository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("ServiceCenterServiceType not found: " + id));
+    	logger.info("Updating service center service type with ID: {}", id);
+    	ServiceCenterServiceType existing = repository.findById(id)
+    			.orElseThrow(() -> {
+    				logger.error("ServiceCenterServiceType not found with ID: {}", id);
+    				return new IllegalArgumentException("ServiceCenterServiceType not found: " + id);
+    				});
+
         existing.setServiceCenter(convertToEntity(serviceCenterService.findById(scstDTO.getServiceCenterId())));
         existing.setServiceType(convertToEntity(serviceTypeService.findById(scstDTO.getServiceTypeId())));
         existing.setCost(scstDTO.getCost());
         ServiceCenterServiceType savedScst = repository.save(existing);
+        logger.info("Service center service type updated successfully with ID: {}", savedScst.getId());
         return convertToDTO(savedScst);
+
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ServiceCenterServiceTypeDTO> getByServiceCenter(Long serviceCenterId) {
+    	logger.info("Fetching service types for service center ID: {}", serviceCenterId);
         List<ServiceCenterServiceType> scstList = repository.findByServiceCenterId(serviceCenterId);
+        logger.info("Fetched {} service types for service center ID: {}", scstList.size(), serviceCenterId);
         return scstList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
@@ -63,7 +80,9 @@ public class ServiceCenterServiceTypeServiceImpl implements ServiceCenterService
     @Override
     @Transactional(readOnly = true)
     public List<ServiceCenterServiceTypeDTO> getByServiceType(Long serviceTypeId) {
+    	logger.info("Fetching service centers for service type ID: {}", serviceTypeId);
         List<ServiceCenterServiceType> scstList = repository.findByServiceTypeId(serviceTypeId);
+        logger.info("Fetched {} service centers for service type ID: {}", scstList.size(), serviceTypeId);
         return scstList.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

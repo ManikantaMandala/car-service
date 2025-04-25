@@ -1,5 +1,7 @@
 package com.hcl.carservicing.carservice.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -16,6 +18,16 @@ public class DeliveryBoyDTO {
 
 	@NotNull(message = "Service Center ID is mandatory")
 	private Long serviceCenterId;
+
+	private List<Long> serviceRequestsId;
+
+	public List<Long> getServiceRequestsId() {
+		return serviceRequestsId;
+	}
+
+	public void setServiceRequestsId(List<Long> serviceRequestsId) {
+		this.serviceRequestsId = serviceRequestsId;
+	}
 
 	public String getName() {
 		return name;
