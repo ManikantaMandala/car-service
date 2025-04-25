@@ -2,6 +2,8 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import com.hcl.carservicing.carservice.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final AppUserRepository userRepository;
 
     public UserServiceImpl(AppUserRepository userRepository) {
@@ -22,14 +25,17 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void register(AppUserDTO userDTO) {
+    	logger.info("Registering user with username: {}", userDTO.getUsername());
         // Check for existing username
         Optional<AppUser> existing = userRepository.findByUsername(userDTO.getUsername());
         if (existing.isPresent()) {
+        	logger.error("Username already exists: {}", userDTO.getUsername());
             throw new ElementAlreadyExistException("Username already exists: " + userDTO.getUsername());
         }
         // Check for existing contact number
         Optional<AppUser> existingContactNumber = userRepository.findByContactNumber(userDTO.getContactNumber());
         if (existingContactNumber.isPresent()) {
+        	logger.error("Contact Number already exists: {}", userDTO.getContactNumber());
             throw new ElementAlreadyExistException("Contact Number already exists: " + userDTO.getContactNumber());
         }
 
@@ -44,14 +50,27 @@ public class UserServiceImpl implements UserService {
         user.setRole(userDTO.getRole());
 
         userRepository.save(user);
+        logger.info("User registered successfully with username: {}", userDTO.getUsername());
     }
 
     @Override
     @Transactional(readOnly = true)
     public void login(String userId, String password) {
-        AppUser user = userRepository.findByUsername(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+    	logger.info("User login attempt with username: {}", userId);
+    	AppUser user = userRepository.findByUsername(userId)
+    		.orElseThrow(() -> {
+    			logger.error("Invalid credentials for username: {}", userId);
+    			return new IllegalArgumentException("Invalid credentials");
+    		});
+
         // TODO: Compare encoded passwords
+    	if (!user.getPassword().equals(password)) {
+    		logger.error("Invalid credentials for username: {}", userId);
+    		throw new IllegalArgumentException("Invalid credentials");
+    	}
+
+    	logger.info("User logged in successfully with username: {}", userId);
+
         if (!user.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid credentials");
         }
