@@ -25,119 +25,121 @@ public class ServiceCenterServiceTypeServiceImpl implements ServiceCenterService
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceTypeServiceImpl.class);
 
-	private final ServiceCenterServiceTypeRepository repository;
-	private final ServiceCenterService serviceCenterService;
-	private final ServiceTypeService serviceTypeService;
+    private final ServiceCenterServiceTypeRepository repository;
+    private final ServiceCenterService serviceCenterService;
+    private final ServiceTypeService serviceTypeService;
 
-	public ServiceCenterServiceTypeServiceImpl(ServiceCenterServiceTypeRepository repository,
-			ServiceCenterService serviceCenterService,
-			ServiceTypeService serviceTypeService) {
-		this.repository = repository;
-		this.serviceCenterService = serviceCenterService;
-		this.serviceTypeService = serviceTypeService;
-	}
+    public ServiceCenterServiceTypeServiceImpl(ServiceCenterServiceTypeRepository repository,
+                                               ServiceCenterService serviceCenterService,
+                                               ServiceTypeService serviceTypeService) {
+        this.repository = repository;
+        this.serviceCenterService = serviceCenterService;
+        this.serviceTypeService = serviceTypeService;
+    }
 
-	@Override
-	@Transactional
-	public void addServiceTypeToCenter(ServiceCenterServiceTypeDTO scstDTO) {
-		logger.info("Adding service type to service center with ID: {}", scstDTO.getServiceCenterId());
+    @Override
+    @Transactional
+    public ServiceCenterServiceTypeDTO addServiceTypeToCenter(ServiceCenterServiceTypeDTO scstDTO) {
+    	logger.info("Adding service type to service center with ID: {}", scstDTO.getServiceCenterId());
 
-		ServiceCenterServiceType scst = convertToEntity(scstDTO);
-		ServiceCenterServiceType savedScst = repository.save(scst);
+        ServiceCenterServiceType scst = convertToEntity(scstDTO);
+        ServiceCenterServiceType savedScst = repository.save(scst);
 
-		logger.info("Service type added successfully with ID: {}", savedScst.getId());
-	}
+        logger.info("Service type added successfully with ID: {}", savedScst.getId());
 
-	@Override
-	@Transactional
-	public void updateServiceCenterServiceType(Long id, ServiceCenterServiceTypeDTO scstDTO) {
-		logger.info("Updating service center service type with ID: {}", id);
-		ServiceCenterServiceType existing = repository.findById(id)
-				.orElseThrow(() -> {
-					logger.error("ServiceCenterServiceType not found with ID: {}", id);
-					return new ElementNotFoundException("ServiceCenterServiceType not found: " + id);
-				});
+        return convertToDTO(savedScst);
 
-		// TODO: handle isEmpty()
-		// TODO: use repository and remove service
-		existing.setServiceCenter(convertToEntity(serviceCenterService.findById(scstDTO.getServiceCenterId())));
-		existing.setServiceType(convertToEntity(serviceTypeService.findById(scstDTO.getServiceTypeId())));
-		existing.setCost(scstDTO.getCost());
+    }
 
-		ServiceCenterServiceType savedScst = repository.save(existing);
+    @Override
+    @Transactional
+    public ServiceCenterServiceTypeDTO updateServiceCenterServiceType(Long id, ServiceCenterServiceTypeDTO scstDTO) {
+    	logger.info("Updating service center service type with ID: {}", id);
+    	ServiceCenterServiceType existing = repository.findById(id)
+    			.orElseThrow(() -> {
+    				logger.error("ServiceCenterServiceType not found with ID: {}", id);
+    				return new ElementNotFoundException("ServiceCenterServiceType not found: " + id);
+    				});
 
-		logger.info("Service center service type updated successfully with ID: {}", savedScst.getId());
-	}
+        existing.setServiceCenter(convertToEntity(serviceCenterService.findById(scstDTO.getServiceCenterId())));
+        existing.setServiceType(convertToEntity(serviceTypeService.findById(scstDTO.getServiceTypeId())));
+        existing.setCost(scstDTO.getCost());
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ServiceCenterServiceTypeDTO> getByServiceCenter(Long serviceCenterId) {
-		logger.info("Fetching service types for service center ID: {}", serviceCenterId);
+        ServiceCenterServiceType savedScst = repository.save(existing);
 
-		List<ServiceCenterServiceType> scstList = repository.findByServiceCenterId(serviceCenterId);
+        logger.info("Service center service type updated successfully with ID: {}", savedScst.getId());
 
-		logger.info("Fetched {} service types for service center ID: {}", scstList.size(), serviceCenterId);
+        return convertToDTO(savedScst);
+    }
 
-		return scstList.stream()
-				.map(this::convertToDTO)
-				.collect(Collectors.toList());
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public List<ServiceCenterServiceTypeDTO> getByServiceCenter(Long serviceCenterId) {
+    	logger.info("Fetching service types for service center ID: {}", serviceCenterId);
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ServiceCenterServiceTypeDTO> getByServiceType(Long serviceTypeId) {
-		logger.info("Fetching service centers for service type ID: {}", serviceTypeId);
+        List<ServiceCenterServiceType> scstList = repository.findByServiceCenterId(serviceCenterId);
 
-		List<ServiceCenterServiceType> scstList = repository.findByServiceTypeId(serviceTypeId);
+        logger.info("Fetched {} service types for service center ID: {}", scstList.size(), serviceCenterId);
 
-		logger.info("Fetched {} service centers for service type ID: {}", scstList.size(), serviceTypeId);
+        return scstList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-		return scstList.stream()
-				.map(this::convertToDTO)
-				.collect(Collectors.toList());
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public List<ServiceCenterServiceTypeDTO> getByServiceType(Long serviceTypeId) {
+    	logger.info("Fetching service centers for service type ID: {}", serviceTypeId);
 
-	private ServiceCenterServiceType convertToEntity(ServiceCenterServiceTypeDTO scstDTO) {
-		ServiceCenterServiceType scst = new ServiceCenterServiceType();
+        List<ServiceCenterServiceType> scstList = repository.findByServiceTypeId(serviceTypeId);
 
-		// TODO: refactor this
-		scst.setId(scstDTO.getId());
-		scst.setServiceCenter(convertToEntity(serviceCenterService.findById(scstDTO.getServiceCenterId())));
-		scst.setServiceType(convertToEntity(serviceTypeService.findById(scstDTO.getServiceTypeId())));
-		scst.setCost(scstDTO.getCost());
+        logger.info("Fetched {} service centers for service type ID: {}", scstList.size(), serviceTypeId);
 
-		return scst;
-	}
+        return scstList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-	private ServiceCenterServiceTypeDTO convertToDTO(ServiceCenterServiceType scst) {
-		ServiceCenterServiceTypeDTO scstDTO = new ServiceCenterServiceTypeDTO();
+    private ServiceCenterServiceType convertToEntity(ServiceCenterServiceTypeDTO scstDTO) {
+        ServiceCenterServiceType scst = new ServiceCenterServiceType();
 
-		scstDTO.setId(scst.getId());
-		scstDTO.setServiceCenterId(scst.getServiceCenter().getId());
-		scstDTO.setServiceTypeId(scst.getServiceType().getId());
-		scstDTO.setCost(scst.getCost());
+        scst.setId(scstDTO.getId());
+        scst.setServiceCenter(convertToEntity(serviceCenterService.findById(scstDTO.getServiceCenterId())));
+        scst.setServiceType(convertToEntity(serviceTypeService.findById(scstDTO.getServiceTypeId())));
+        scst.setCost(scstDTO.getCost());
 
-		return scstDTO;
-	}
+        return scst;
+    }
 
-	private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
-		ServiceCenter serviceCenter = new ServiceCenter();
+    private ServiceCenterServiceTypeDTO convertToDTO(ServiceCenterServiceType scst) {
+        ServiceCenterServiceTypeDTO scstDTO = new ServiceCenterServiceTypeDTO();
 
-		serviceCenter.setId(serviceCenterDTO.getId());
-		serviceCenter.setName(serviceCenterDTO.getName());
-		serviceCenter.setAddress(serviceCenterDTO.getAddress());
-		serviceCenter.setRating(serviceCenterDTO.getRating());
-		serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
+        scstDTO.setId(scst.getId());
+        scstDTO.setServiceCenterId(scst.getServiceCenter().getId());
+        scstDTO.setServiceTypeId(scst.getServiceType().getId());
+        scstDTO.setCost(scst.getCost());
 
-		return serviceCenter;
-	}
+        return scstDTO;
+    }
 
-	private ServiceType convertToEntity(ServiceTypeDTO serviceTypeDTO) {
-		ServiceType serviceType = new ServiceType();
+    private ServiceCenter convertToEntity(ServiceCenterDTO serviceCenterDTO) {
+        ServiceCenter serviceCenter = new ServiceCenter();
 
-		serviceType.setId(serviceTypeDTO.getId());
-		serviceType.setServiceName(serviceTypeDTO.getServiceName());
+        serviceCenter.setId(serviceCenterDTO.getId());
+        serviceCenter.setName(serviceCenterDTO.getName());
+        serviceCenter.setAddress(serviceCenterDTO.getAddress());
+        serviceCenter.setRating(serviceCenterDTO.getRating());
+        serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
 
-		return serviceType;
-	}
+        return serviceCenter;
+    }
+
+    private ServiceType convertToEntity(ServiceTypeDTO serviceTypeDTO) {
+        ServiceType serviceType = new ServiceType();
+
+        serviceType.setId(serviceTypeDTO.getId());
+        serviceType.setServiceName(serviceTypeDTO.getServiceName());
+
+        return serviceType;
+    }
 }

@@ -16,86 +16,90 @@ import com.hcl.carservicing.carservice.service.ServiceTypeService;
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
 	private static final Logger logger = LoggerFactory.getLogger(ServiceTypeServiceImpl.class);
-	private final ServiceTypeRepository serviceTypeRepository;
+    private final ServiceTypeRepository serviceTypeRepository;
 
-	public ServiceTypeServiceImpl(ServiceTypeRepository serviceTypeRepository) {
-		this.serviceTypeRepository = serviceTypeRepository;
-	}
+    public ServiceTypeServiceImpl(ServiceTypeRepository serviceTypeRepository) {
+        this.serviceTypeRepository = serviceTypeRepository;
+    }
 
-	@Override
-	@Transactional
-	public void createServiceType(ServiceTypeDTO serviceTypeDTO) {
-		logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
-		ServiceType serviceType = new ServiceType();
+    @Override
+    @Transactional
+    public ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO) {
+    	logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
+        ServiceType serviceType = new ServiceType();
 
-		serviceType.setServiceName(serviceTypeDTO.getServiceName());
-		serviceType.setDescription(serviceTypeDTO.getDescription());
-		ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
-		logger.info("Service type created successfully with ID: {}", savedServiceType.getId());
-	}
+        serviceType.setServiceName(serviceTypeDTO.getServiceName());
+        serviceType.setDescription(serviceTypeDTO.getDescription());
+        ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
+        logger.info("Service type created successfully with ID: {}", savedServiceType.getId());
+        return convertServiceTypeToDTO(savedServiceType);
 
-	@Override
-	@Transactional
-	public void updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
-		logger.info("Updating service type with ID: {}", id);
-		ServiceType existing = serviceTypeRepository.findById(id)
-				.orElseThrow(() -> {
-					logger.error("Service type not found with ID: {}", id);
-					return new ElementNotFoundException("ServiceType not found: " + id);
-				});
+    }
 
-		existing.setServiceName(serviceTypeDTO.getServiceName());
-		existing.setDescription(serviceTypeDTO.getDescription());
+    @Override
+    @Transactional
+    public ServiceTypeDTO updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
+    	logger.info("Updating service type with ID: {}", id);
+    	ServiceType existing = serviceTypeRepository.findById(id)
+    			.orElseThrow(() -> {
+    				logger.error("Service type not found with ID: {}", id);
+    				return new ElementNotFoundException("ServiceType not found: " + id);
+    			});
 
-		ServiceType savedServiceType = serviceTypeRepository.save(existing);
+        existing.setServiceName(serviceTypeDTO.getServiceName());
+        existing.setDescription(serviceTypeDTO.getDescription());
 
-		logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
-	}
+        ServiceType savedServiceType = serviceTypeRepository.save(existing);
 
-	@Override
-	@Transactional(readOnly = true)
-	public ServiceTypeDTO getServiceTypeById(Long id) {
-		logger.info("Fetching service type with ID: {}", id);
-		return serviceTypeRepository.findById(id).map(serviceType -> {
-			logger.info("Service type found with ID: {}", id);
-			return convertServiceTypeToDTO(serviceType);
-		}).orElseThrow(() -> {
-			logger.error("Service type not found with ID: {}", id);
-			return new ElementNotFoundException("ServiceType not found: " + id);
-		});
+        logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
 
-	}
+        return convertServiceTypeToDTO(savedServiceType);
 
-	@Override
-	@Transactional(readOnly = true)
-	public List<ServiceTypeDTO> getAllServiceTypes() {
-		logger.info("Fetching all service types");
-		List<ServiceType> serviceTypes = serviceTypeRepository.findAll();
+    }
 
-		logger.info("Fetched {} service types", serviceTypes.size());
-		return serviceTypes.stream().map(this::convertServiceTypeToDTO).toList();
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceTypeDTO getServiceTypeById(Long id) {
+    	logger.info("Fetching service type with ID: {}", id);
+    	return serviceTypeRepository.findById(id)
+    			.map(serviceType -> {
+    				logger.info("Service type found with ID: {}", id);
+    				return convertServiceTypeToDTO(serviceType);
+    		}).orElseThrow(() -> {
+    			logger.error("Service type not found with ID: {}", id);
+    			return new ElementNotFoundException("ServiceType not found: " + id);
+    		});
 
-	@Override
-	@Transactional(readOnly = true)
-	public ServiceTypeDTO findById(Long id) {
-		logger.info("Finding service type with ID: {}", id);
-		ServiceType serviceType = serviceTypeRepository.findById(id)
-				.orElseThrow(() -> {
-					logger.error("Service type not found with ID: {}", id);
-					return new ElementNotFoundException("Service type not found: " + id);
-				});
+    }
 
-		logger.info("Service type found with ID: {}", id);
-		return convertServiceTypeToDTO(serviceType);
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public List<ServiceTypeDTO> getAllServiceTypes() {
+    	logger.info("Fetching all service types");
+    	List<ServiceType> serviceTypes = serviceTypeRepository.findAll();
+    	logger.info("Fetched {} service types", serviceTypes.size());
+    	return serviceTypes.stream().map(this::convertServiceTypeToDTO).toList();
 
-	private ServiceTypeDTO convertServiceTypeToDTO(ServiceType serviceType) {
-		ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
+    }
 
-		serviceTypeDTO.setId(serviceType.getId());
-		serviceTypeDTO.setServiceName(serviceType.getServiceName());
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceTypeDTO findById(Long id) {
+    	logger.info("Finding service type with ID: {}", id);
+    	ServiceType serviceType = serviceTypeRepository.findById(id)
+    			.orElseThrow(() -> {
+    				logger.error("Service type not found with ID: {}", id);
+    				return new ElementNotFoundException("ServiceType not found: " + id);
+    			});
+    	logger.info("Service type found with ID: {}", id);
+    	return convertServiceTypeToDTO(serviceType);
 
-		return serviceTypeDTO;
-	}
+    }
+
+    private ServiceTypeDTO convertServiceTypeToDTO(ServiceType serviceType) {
+        ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
+        serviceTypeDTO.setId(serviceType.getId());
+        serviceTypeDTO.setServiceName(serviceType.getServiceName());
+        return serviceTypeDTO;
+    }
 }
