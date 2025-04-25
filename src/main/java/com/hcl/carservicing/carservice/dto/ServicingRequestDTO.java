@@ -94,4 +94,9 @@ public class ServicingRequestDTO {
 	public void setServiceCenterId(Long serviceCenterId) {
 		this.serviceCenterId = serviceCenterId;
 	}
+
+	public void setRequestId(long l) {
+		// TODO Auto-generated method stub
+		this.id = id;
+	}
 }
