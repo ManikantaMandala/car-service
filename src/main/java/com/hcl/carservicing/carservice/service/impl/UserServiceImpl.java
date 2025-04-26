@@ -1,6 +1,7 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.hcl.carservicing.carservice.config.JwtUtil;
@@ -19,6 +20,7 @@ import com.hcl.carservicing.carservice.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final AppUserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -69,8 +71,7 @@ public class UserServiceImpl implements UserService {
     		});
 
         // TODO: Compare encoded passwords
-        // TODO: !Objects.equals(a, b)
-    	if (!user.getPassword().equals(password)) {
+        if (!Objects.equals(user.getPassword(), password)){
     		logger.error("Invalid credentials for username: {}", userId);
     		throw new IllegalArgumentException("Invalid credentials");
     	}

@@ -15,7 +15,9 @@ import com.hcl.carservicing.carservice.service.ServiceTypeService;
 
 @Service
 public class ServiceTypeServiceImpl implements ServiceTypeService {
+
 	private static final Logger logger = LoggerFactory.getLogger(ServiceTypeServiceImpl.class);
+
     private final ServiceTypeRepository serviceTypeRepository;
 
     public ServiceTypeServiceImpl(ServiceTypeRepository serviceTypeRepository) {
@@ -52,9 +54,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         ServiceType savedServiceType = serviceTypeRepository.save(existing);
 
         logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
-
         return convertServiceTypeToDTO(savedServiceType);
-
     }
 
     @Override
@@ -69,7 +69,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     			logger.error("Service type not found with ID: {}", id);
     			return new ElementNotFoundException("ServiceType not found: " + id);
     		});
-
     }
 
     @Override
@@ -77,9 +76,9 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     public List<ServiceTypeDTO> getAllServiceTypes() {
     	logger.info("Fetching all service types");
     	List<ServiceType> serviceTypes = serviceTypeRepository.findAll();
+
     	logger.info("Fetched {} service types", serviceTypes.size());
     	return serviceTypes.stream().map(this::convertServiceTypeToDTO).toList();
-
     }
 
     @Override
@@ -91,15 +90,18 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     				logger.error("Service type not found with ID: {}", id);
     				return new ElementNotFoundException("ServiceType not found: " + id);
     			});
+
     	logger.info("Service type found with ID: {}", id);
     	return convertServiceTypeToDTO(serviceType);
-
     }
 
+    // TODO: use loggers
     private ServiceTypeDTO convertServiceTypeToDTO(ServiceType serviceType) {
         ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
+
         serviceTypeDTO.setId(serviceType.getId());
         serviceTypeDTO.setServiceName(serviceType.getServiceName());
+
         return serviceTypeDTO;
     }
 }

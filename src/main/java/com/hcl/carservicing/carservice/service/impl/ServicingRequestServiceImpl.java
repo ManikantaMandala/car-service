@@ -32,6 +32,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     private final AppUserRepository appUserRepository;
     private final DeliveryBoyRepository deliveryBoyRepository;
     private final ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository;
+
     public ServicingRequestServiceImpl(ServicingRequestRepository repository,
     		AppUserRepository appUserRepository,DeliveryBoyRepository deliveryBoyRepository,
             ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository,
@@ -72,8 +73,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         request.setServiceCenter(serviceCenter);
 
         // Check if deliveryBoyId is provided
-        // TODO: write this understandable
-        // TODO: what happens when it is null
         if (requestDTO.getDeliveryBoyId() != null) {
         	DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(requestDTO.getDeliveryBoyId())
         		.orElseThrow(() -> {

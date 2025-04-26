@@ -42,17 +42,23 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     public ServiceCenterDTO updateServiceCenter(Long id, ServiceCenterDTO serviceCenterDTO) {
     	logger.info("Updating service center with ID: {}", id);
         Optional<ServiceCenter> existingServiceCenter = serviceCenterRepository.findById(id);
-        // TODO: use Optional.isEmpty() here
-        if (existingServiceCenter.isPresent()) {
-            ServiceCenter updatedServiceCenter = existingServiceCenter.get();
-            updatedServiceCenter.setName(serviceCenterDTO.getName());
-            updatedServiceCenter.setAddress(serviceCenterDTO.getAddress());
-            updatedServiceCenter.setRating(serviceCenterDTO.getRating());
-            updatedServiceCenter.setAvailable(serviceCenterDTO.getAvailable());
-            ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
-            return convertToDTO(savedServiceCenter);
+        if (existingServiceCenter.isEmpty()) {
+            logger.info("Service center not found: {}", id);
+            throw new ElementNotFoundException("Service center not found: " + id);
         }
-        return null; // TODO: throw custom exception as needed
+
+        ServiceCenter updatedServiceCenter = existingServiceCenter.get();
+
+        updatedServiceCenter.setName(serviceCenterDTO.getName());
+        updatedServiceCenter.setAddress(serviceCenterDTO.getAddress());
+        updatedServiceCenter.setRating(serviceCenterDTO.getRating());
+        updatedServiceCenter.setAvailable(serviceCenterDTO.getAvailable());
+
+        logger.info("saving the service center");
+        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
+
+        logger.info("converting the saved service center");
+        return convertToDTO(savedServiceCenter);
     }
 
     @Override
@@ -84,13 +90,13 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     	return serviceCenterRepository.findById(id).map(serviceCenter -> {
     		logger.info("Service center found with ID: {}", id);
             return convertToDTO(serviceCenter);
-        }).orElseGet(() -> {logger.error("Service center not found with ID: {}", id);
-            return null; //TODO: custom throw exception
+        }).orElseGet(() -> {
+            logger.error("Service center not found with ID: {}", id);
+            throw new ElementNotFoundException("Service center not found with ID: " + id);
         });
 
     }
 
-//    public ResponseEntity<ServiceCenterDTO> updateStatusOfServiceCenter(Long id, Boolean status) {
     @Override
     public void updateStatusOfServiceCenter(Long id, Boolean status) {
         Optional<ServiceCenter> existingServiceCenter = serviceCenterRepository.findById(id);
@@ -103,10 +109,8 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         ServiceCenter updatedServiceCenter = existingServiceCenter.get();
         updatedServiceCenter.setAvailable(status);
 
-//        ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
         ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
         logger.info("Service center status updated successfully with ID: {}", savedServiceCenter.getId());
-//        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDTO(savedServiceCenter));
     }
 
     @Override

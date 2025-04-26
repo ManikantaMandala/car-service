@@ -27,12 +27,11 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
 	private static final Logger logger = LoggerFactory.getLogger(DeliveryBoyServiceImpl.class);
 
     private final DeliveryBoyRepository deliveryBoyRepository;
-    private final ServiceCenterService serviceCenterService;
     private final ServiceCenterRepository serviceCenterRepository;
 
-    public DeliveryBoyServiceImpl(DeliveryBoyRepository deliveryBoyRepository, ServiceCenterService serviceCenterService, ServiceCenterRepository serviceCenterRepository) {
+    public DeliveryBoyServiceImpl(DeliveryBoyRepository deliveryBoyRepository,
+                                  ServiceCenterRepository serviceCenterRepository) {
         this.deliveryBoyRepository = deliveryBoyRepository;
-        this.serviceCenterService = serviceCenterService;
         this.serviceCenterRepository = serviceCenterRepository;
     }
 
@@ -52,23 +51,16 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         deliveryBoy.setName(deliveryBoyDTO.getName());
         deliveryBoy.setContactNumber(deliveryBoyDTO.getContactNumber());
 
-//        ServiceCenterDTO serviceCenterDTO = serviceCenterService.findById(deliveryBoyDTO.getServiceCenterId());
-//        if (serviceCenterDTO == null) {
-//        	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
-//            throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
-//        }
-//        ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
-        // TODO: use lambda expression on Optional
         Optional<ServiceCenter> serviceCenterOptional = serviceCenterRepository.findById(deliveryBoyDTO.getServiceCenterId());
         if (serviceCenterOptional.isEmpty()) {
         	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
             throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
         }
+
         deliveryBoy.setServiceCenter(serviceCenterOptional.get());
 
         DeliveryBoy savedDeliveryBoy = deliveryBoyRepository.save(deliveryBoy);
         logger.info("Delivery boy created successfully with ID: {}", savedDeliveryBoy.getId());
-//       return toDto(savedDeliveryBoy);
     }
 
     @Override
@@ -83,14 +75,12 @@ public class DeliveryBoyServiceImpl implements DeliveryBoyService {
         existing.setName(deliveryBoyDTO.getName());
         existing.setContactNumber(deliveryBoyDTO.getContactNumber());
 
-        // TODO: remove serviceCenterService and add serviceCenterRepository
-        ServiceCenterDTO serviceCenterDTO = serviceCenterService.findById(deliveryBoyDTO.getServiceCenterId());
-        if (serviceCenterDTO == null) {
-        	logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
+        Optional<ServiceCenter> serviceCenterOptional = serviceCenterRepository.findById(id);
+        if (serviceCenterOptional.isEmpty()) {
+            logger.error("Invalid Service Center ID: {}", deliveryBoyDTO.getServiceCenterId());
             throw new IllegalArgumentException("Invalid Service Center ID: " + deliveryBoyDTO.getServiceCenterId());
         }
-        ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
-        existing.setServiceCenter(serviceCenter);
+        existing.setServiceCenter(serviceCenterOptional.get());
 
         DeliveryBoy updatedDeliveryBoy = deliveryBoyRepository.save(existing);
         logger.info("Delivery boy updated successfully with ID: {}", updatedDeliveryBoy.getId());
