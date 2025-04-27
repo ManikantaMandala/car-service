@@ -2,6 +2,7 @@ package com.hcl.carservicing.carservice.controller;
 
 import com.hcl.carservicing.carservice.dto.AppUserDTO;
 import com.hcl.carservicing.carservice.dto.UserLoginDTO;
+import com.hcl.carservicing.carservice.enums.UserRole;
 import com.hcl.carservicing.carservice.service.UserService;
 import com.hcl.carservicing.carservice.config.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows; // Import assertThrows
@@ -92,7 +94,11 @@ class UserControllerTest {
 		String userId = "testUser";
 		String password = "password";
 		String token = "mockedToken";
+		UserRole role = UserRole.USER;
 		Date expiration = new Date();
+
+//		HashMap<String, UserRole> authorities = new HashMap<>();
+//		authorities.put("role", role);
 
 		UserLoginDTO userLoginDTO = new UserLoginDTO(token, expiration);
 
@@ -123,6 +129,7 @@ class UserControllerTest {
 		assertThrows(RuntimeException.class, () -> userController.login(userId, password)); // Use assertThrows
 
 		verify(userService, times(1)).login(userId, password);
+//		verify(jwtUtil, times(0)).generateToken(userId, new HashMap<>());
 		verify(jwtUtil, times(0)).generateToken(userId);
 	}
 
