@@ -46,7 +46,14 @@ public class SecurityConfig {
                                 "/api/service-center-services/**"
                         ).hasAuthority("ADMIN")
 
-                        .requestMatchers("/api/user/**").hasAuthority("USER")
+                        .requestMatchers("/api/user/**",
+                                "/api/service-types/getAll",
+                                "/api/service-types/getById/",
+                                "/api/service-center-services/byServiceType/",
+                                "api/service-center-services/byCenter/",
+                                "api/service-centers/getAllServiceCenters",
+                                "api/service-centers/getAvailableServiceCenters",
+                                "api/service-centers/getServiceCenterById/").hasAuthority("USER")
 
                         .anyRequest().authenticated()
                 )
