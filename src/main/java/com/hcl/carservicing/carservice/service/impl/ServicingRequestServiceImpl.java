@@ -32,6 +32,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
     private final AppUserRepository appUserRepository;
     private final DeliveryBoyRepository deliveryBoyRepository;
     private final ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository;
+
     public ServicingRequestServiceImpl(ServicingRequestRepository repository,
     		AppUserRepository appUserRepository,DeliveryBoyRepository deliveryBoyRepository,
             ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository,
@@ -45,7 +46,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
 
     @Override
     @Transactional
-    public ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO) {
+    public void createRequest(ServicingRequestDTO requestDTO) {
     	logger.info("Creating servicing request for user: {}", requestDTO.getUsername());
         ServicingRequest request = new ServicingRequest();
 
@@ -72,8 +73,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         request.setServiceCenter(serviceCenter);
 
         // Check if deliveryBoyId is provided
-        // TODO: write this understandable
-        // TODO: what happens when it is null
         if (requestDTO.getDeliveryBoyId() != null) {
         	DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(requestDTO.getDeliveryBoyId())
         		.orElseThrow(() -> {
@@ -85,7 +84,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
 
         ServicingRequest savedRequest = repository.save(request);
         logger.info("Servicing request created successfully with ID: {}", savedRequest.getId());
-        return toDto(savedRequest);
     }
 
     @Override
@@ -108,8 +106,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         servicingRequestDto.setServiceId(servicingRequest.getService().getId());
         servicingRequestDto.setServiceCenterId(servicingRequest.getServiceCenter().getId());
 
-        // TODO: check for null first
-        // TODO: add != null last
         if (servicingRequest.getDeliveryBoy() != null) {
             servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
         } else {
