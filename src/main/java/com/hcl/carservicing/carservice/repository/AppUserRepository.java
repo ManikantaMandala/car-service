@@ -11,10 +11,6 @@ import com.hcl.carservicing.carservice.model.AppUser;
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByUsername(String username);
-
 	Optional<AppUser> findByContactNumber(String contactNumber);
-
-	// TODO: remove this because it is not used
-	AppUser save(AppUserDTO userDTO);
 }
 

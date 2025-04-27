@@ -30,16 +30,15 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     }
 
     @Override
-    public ServiceCenterDTO createServiceCenter(ServiceCenterDTO serviceCenterDTO) {
+    public void createServiceCenter(ServiceCenterDTO serviceCenterDTO) {
     	logger.info("Creating service center with name: {}", serviceCenterDTO.getName());
         ServiceCenter serviceCenter = convertToEntity(serviceCenterDTO);
         ServiceCenter savedServiceCenter = serviceCenterRepository.save(serviceCenter);
         logger.info("Service center created successfully with ID: {}", savedServiceCenter.getId());
-        return convertToDTO(savedServiceCenter);
     }
 
     @Override
-    public ServiceCenterDTO updateServiceCenter(Long id, ServiceCenterDTO serviceCenterDTO) {
+    public void updateServiceCenter(Long id, ServiceCenterDTO serviceCenterDTO) {
     	logger.info("Updating service center with ID: {}", id);
         Optional<ServiceCenter> existingServiceCenter = serviceCenterRepository.findById(id);
         if (existingServiceCenter.isEmpty()) {
@@ -58,7 +57,6 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         ServiceCenter savedServiceCenter = serviceCenterRepository.save(updatedServiceCenter);
 
         logger.info("converting the saved service center");
-        return convertToDTO(savedServiceCenter);
     }
 
     @Override
@@ -85,7 +83,6 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
     @Override
     public ServiceCenterDTO getServiceCenterById(Long id) {
-        // TODO: Custom exception
     	logger.info("Fetching service center with ID: {}", id);
     	return serviceCenterRepository.findById(id).map(serviceCenter -> {
     		logger.info("Service center found with ID: {}", id);

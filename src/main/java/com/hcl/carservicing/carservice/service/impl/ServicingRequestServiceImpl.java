@@ -46,7 +46,7 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
 
     @Override
     @Transactional
-    public ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO) {
+    public void createRequest(ServicingRequestDTO requestDTO) {
     	logger.info("Creating servicing request for user: {}", requestDTO.getUsername());
         ServicingRequest request = new ServicingRequest();
 
@@ -84,7 +84,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
 
         ServicingRequest savedRequest = repository.save(request);
         logger.info("Servicing request created successfully with ID: {}", savedRequest.getId());
-        return toDto(savedRequest);
     }
 
     @Override
@@ -107,8 +106,6 @@ public class ServicingRequestServiceImpl implements ServicingRequestService {
         servicingRequestDto.setServiceId(servicingRequest.getService().getId());
         servicingRequestDto.setServiceCenterId(servicingRequest.getServiceCenter().getId());
 
-        // TODO: check for null first
-        // TODO: add != null last
         if (servicingRequest.getDeliveryBoy() != null) {
             servicingRequestDto.setDeliveryBoyId(servicingRequest.getDeliveryBoy().getId());
         } else {

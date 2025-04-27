@@ -26,7 +26,7 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     @Transactional
-    public ServiceTypeDTO createServiceType(ServiceTypeDTO serviceTypeDTO) {
+    public void createServiceType(ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
         ServiceType serviceType = new ServiceType();
 
@@ -34,13 +34,12 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         serviceType.setDescription(serviceTypeDTO.getDescription());
         ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
         logger.info("Service type created successfully with ID: {}", savedServiceType.getId());
-        return convertServiceTypeToDTO(savedServiceType);
 
     }
 
     @Override
     @Transactional
-    public ServiceTypeDTO updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
+    public void updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Updating service type with ID: {}", id);
     	ServiceType existing = serviceTypeRepository.findById(id)
     			.orElseThrow(() -> {
@@ -54,7 +53,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
         ServiceType savedServiceType = serviceTypeRepository.save(existing);
 
         logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
-        return convertServiceTypeToDTO(savedServiceType);
     }
 
     @Override
