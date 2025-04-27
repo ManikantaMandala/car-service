@@ -9,7 +9,7 @@ public interface ServicingRequestService {
     /**
      * Create a new servicing request by a user
      */
-    ServicingRequestDTO createRequest(ServicingRequestDTO requestDTO);
+    void createRequest(ServicingRequestDTO requestDTO);
 
     /**
      * Retrieve all requests placed by a given user

@@ -1,5 +1,7 @@
 package com.hcl.carservicing.carservice.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -21,8 +23,38 @@ public class ServiceCenterDTO {
     @DecimalMin(value = "0.0", inclusive = true, message = "Rating must be at least 0.0")
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating must be at most 5.0")
     private Double rating;
+    
+    private List<ServicingRequestDTO> servicingRequests;
+    
+    private List<ServiceCenterServiceTypeDTO> serviceCenterServiceTypes;
+    
+    private List<DeliveryBoyDTO> deliveryBoys;
 
-    private Boolean available = true;
+	public List<ServicingRequestDTO> getServicingRequests() {
+		return servicingRequests;
+	}
+
+	public void setServicingRequests(List<ServicingRequestDTO> servicingRequests) {
+		this.servicingRequests = servicingRequests;
+	}
+
+	public List<ServiceCenterServiceTypeDTO> getServiceCenterServiceTypes() {
+		return serviceCenterServiceTypes;
+	}
+
+	public void setServiceCenterServiceTypes(List<ServiceCenterServiceTypeDTO> serviceCenterServiceTypes) {
+		this.serviceCenterServiceTypes = serviceCenterServiceTypes;
+	}
+
+	public List<DeliveryBoyDTO> getDeliveryBoys() {
+		return deliveryBoys;
+	}
+
+	public void setDeliveryBoys(List<DeliveryBoyDTO> deliveryBoys) {
+		this.deliveryBoys = deliveryBoys;
+	}
+
+	private Boolean available = true;
     
     public Long getId() {
 		return Id;
