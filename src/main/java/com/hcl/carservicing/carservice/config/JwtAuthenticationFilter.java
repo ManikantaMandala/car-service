@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,7 +17,7 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger myLogger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
@@ -34,12 +33,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
-        logger.info("Authorization Header: " + authorizationHeader);
+        myLogger.info("Authorization Header: " + authorizationHeader);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             String username = jwtUtil.extractUsername(token);
-            logger.info("Extracted Username: " + username);
+            myLogger.info("Extracted Username: " + username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtUtil.validateToken(token, username)) {
@@ -47,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails,userDetails.getPassword() , userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    logger.info("Authentication set for: " + username);
+                    myLogger.info("Authentication set for: " + username);
                 }
             }
         }

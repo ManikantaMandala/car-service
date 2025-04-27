@@ -1,13 +1,20 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.config.CustomUserDetailsService;
 import com.hcl.carservicing.carservice.config.JwtUtil;
 import com.hcl.carservicing.carservice.config.SecurityConfig;
 import com.hcl.carservicing.carservice.dto.UserLoginDTO;
+import com.hcl.carservicing.carservice.enums.UserRole;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +28,19 @@ import com.hcl.carservicing.carservice.service.UserService;
 public class UserServiceImpl implements UserService {
     private final AppUserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public UserServiceImpl(AppUserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(AppUserRepository userRepository,
+                           JwtUtil jwtUtil,
+                           CustomUserDetailsService customUserDetailsService,
+                           PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -59,22 +73,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserLoginDTO login(String userId, String password) {
-        AppUser user = userRepository.findByUsername(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+    public UserLoginDTO login(String username, String password) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
 
-        // Corrected: raw password first, encoded password second
-        boolean isValidPassword = passwordEncoder.matches(passwordEncoder.encode(password),
-                user.getPassword());
-
-        if (!isValidPassword) {
+        if(!authentication.isAuthenticated()) {
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        String jwt = jwtUtil.generateToken(userId);
-        Date expirationDate = jwtUtil.extractExpiration(jwt);
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-        return new UserLoginDTO(jwtUtil.generateToken(userId), expirationDate);
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+        Date expirationTime = jwtUtil.extractExpiration(token);
+
+        return new UserLoginDTO(token, expirationTime);
     }
 
 }

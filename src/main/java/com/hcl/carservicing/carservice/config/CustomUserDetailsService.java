@@ -31,18 +31,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Fetch user from database
-        Optional<AppUser> user= userRepository.findByUsername(username);
+        Optional<AppUser> userOptional= userRepository.findByUsername(username);
 
-        if (user.isEmpty()) {
+        if (userOptional.isEmpty()) {
             logger.warn("User not found");
             throw new UsernameNotFoundException("User not found");
         }
 
-        // Convert roles into authorities
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(user.get().getRole().name());
+        AppUser user = userOptional.get();
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(user.getRole().toString());
 
-//        return new org.springframework.security.core.userdetails.User(user.get().getUsername(), user.get().getPassword(), authorities);
-        return new User(user.get().getUsername(), user.get().getPassword(), authorities);
+        return new User(user.getUsername(), user.getPassword(), authorities);
     }
 }
 
