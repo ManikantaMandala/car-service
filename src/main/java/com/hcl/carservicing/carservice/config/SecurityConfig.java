@@ -34,14 +34,20 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/users/login",
                                 "/api/users/register",
-                                "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/swagger-resources/**",
-                                "/webjars/**"
+                                "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasRole("USER")
+
+                        .requestMatchers(
+                                "/api/admin/**",
+                                "/api/service-centers/**",
+                                "/api/servicing-request",
+                                "/api/delivery-boys/**",
+                                "/api/service-center-services/**"
+                        ).hasAuthority("ADMIN")
+
+                        .requestMatchers("/api/user/**").hasAuthority("USER")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

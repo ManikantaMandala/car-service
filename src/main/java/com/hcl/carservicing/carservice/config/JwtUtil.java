@@ -12,10 +12,10 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secretKey; // At least 256-bit (32 chars for HS256)
-    @Value("${jwt.expiration}")
-    private long expirationTime; // 1 hour in milliseconds
+   // @Value("${jwt.secret}")
+    private String secretKey = "mySuperSecretKey12345mySuperSecretKey12345"; // At least 256-bit (32 chars for HS256)
+   // @Value("${jwt.expiration}")
+    private long expirationTime= 3600000; // 1 hour in milliseconds
     private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
 //    private final String secretKey = "mySuperSecretKey12345mySuperSecretKey12345"; // At least 256-bit (32 chars for HS256)

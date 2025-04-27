@@ -37,9 +37,9 @@ public class AppUserDTO {
     private String username;
 
     @NotBlank(message = "Password is mandatory")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,18}$", 
-            message = "Password must be between 8 and 18 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
-    private String password;
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,18}$",
+			message = "Password must be between 8 and 18 characters and contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
+	private String password;
 
     @NotNull(message = "Role is mandatory")
     private UserRole role;

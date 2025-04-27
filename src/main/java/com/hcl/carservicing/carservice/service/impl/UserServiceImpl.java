@@ -2,7 +2,10 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.config.SecurityConfig;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +18,11 @@ import com.hcl.carservicing.carservice.service.UserService;
 public class UserServiceImpl implements UserService {
     private final AppUserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public UserServiceImpl(AppUserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
@@ -40,7 +47,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(userDTO.getGender());
         user.setContactNumber(userDTO.getContactNumber());
         user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword()); // TODO: Encode password before saving
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole(userDTO.getRole());
 
         userRepository.save(user);
@@ -50,12 +57,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public void login(String userId, String password) {
         AppUser user = userRepository.findByUsername(userId)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
-        // TODO: Compare encoded passwords
-        if (!user.getPassword().equals(password)) {
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+
+        // Corrected: raw password first, encoded password second
+        boolean isValidPassword = passwordEncoder.matches(password, user.getPassword());
+
+        if (!isValidPassword) {
             throw new IllegalArgumentException("Invalid credentials");
         }
-        // TODO: create session if basic auth is used
-        // TODO: or generate jwt and
     }
+
 }

@@ -49,9 +49,6 @@ public class AppUser {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,18}$", 
-            message = "Password must be between 8 and 18 characters and contain at least one uppercase letter,"
-            		+ " one lowercase letter, one digit, and one special character")
     private String password;
 
     @NotNull(message = "Role is mandatory")
