@@ -1,8 +1,11 @@
 package com.hcl.carservicing.carservice.service.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
+import com.hcl.carservicing.carservice.config.JwtUtil;
 import com.hcl.carservicing.carservice.config.SecurityConfig;
+import com.hcl.carservicing.carservice.dto.UserLoginDTO;
 import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,13 +20,13 @@ import com.hcl.carservicing.carservice.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
     private final AppUserRepository userRepository;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public UserServiceImpl(AppUserRepository userRepository) {
-
+    public UserServiceImpl(AppUserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService {
         }
 
         AppUser user = new AppUser();
+
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setAge(userDTO.getAge());
@@ -55,16 +59,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public void login(String userId, String password) {
+    public UserLoginDTO login(String userId, String password) {
         AppUser user = userRepository.findByUsername(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         // Corrected: raw password first, encoded password second
-        boolean isValidPassword = passwordEncoder.matches(password, user.getPassword());
+        boolean isValidPassword = passwordEncoder.matches(passwordEncoder.encode(password),
+                user.getPassword());
 
         if (!isValidPassword) {
             throw new IllegalArgumentException("Invalid credentials");
         }
+
+        String jwt = jwtUtil.generateToken(userId);
+        Date expirationDate = jwtUtil.extractExpiration(jwt);
+
+        return new UserLoginDTO(jwtUtil.generateToken(userId), expirationDate);
     }
 
 }
