@@ -4,18 +4,17 @@ import java.util.List;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class ServiceCenterDTO {
 	private Long Id;
 	
-    @NotBlank(message = "Name is mandatory")
+    @NotNull(message = "Name is mandatory")
     @Size(min = 4, max = 30, message = "Name must be between 4 and 30 characters")
     private String name;
 
-    @NotBlank(message = "Address is mandatory")
+    @NotNull(message = "Address is mandatory")
     @Size(min = 10, max = 255, message = "Address must be between 10 and 255 characters")
     private String address;
 

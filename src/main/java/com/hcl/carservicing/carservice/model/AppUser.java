@@ -3,6 +3,7 @@ package com.hcl.carservicing.carservice.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hcl.carservicing.carservice.enums.Gender;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,8 +37,8 @@ public class AppUser {
     private Integer age;
     
     @NotNull(message = "Gender is mandatory")
-    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
-    private String gender;
+//    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
+    private Gender gender;
     
     @NotBlank(message = "Contact Number is mandatory")
     @Column(unique = true, nullable = false)
@@ -97,11 +98,11 @@ public class AppUser {
 		this.age = age;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 

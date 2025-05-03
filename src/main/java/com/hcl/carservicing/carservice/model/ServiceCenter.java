@@ -36,7 +36,6 @@ public class ServiceCenter {
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating must be at most 5.0")
     private Double rating;
 
-
     @OneToMany(mappedBy = "serviceCenter", 
     		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<ServicingRequest> servicingRequests;

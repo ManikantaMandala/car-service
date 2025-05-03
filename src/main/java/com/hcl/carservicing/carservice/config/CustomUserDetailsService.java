@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private static Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private final AppUserRepository userRepository;
 
@@ -30,7 +30,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Fetch user from database
         Optional<AppUser> userOptional= userRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {

@@ -32,56 +32,60 @@ public class ServiceCenterController {
         this.serviceCenterService = serviceCenterService;
     }
 
-    // Add a new service center
     @PostMapping("/addServiceCenter")
     public ResponseEntity<String> addServiceCenter(@Valid @RequestBody ServiceCenterDTO serviceCenterDTO) {
         logger.info("Adding new service center with details: {}", serviceCenterDTO);
         serviceCenterService.createServiceCenter(serviceCenterDTO);
+
         logger.info("Service center created successfully with details: {}", serviceCenterDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Service center created successfully");
     }
 
-    // Update service center details
     @PutMapping("/updateServiceCenter/{id}")
-    public ResponseEntity<String> updateServiceCenter(@PathVariable Long id, @Valid @RequestBody ServiceCenterDTO serviceCenterDTO) {
+    public ResponseEntity<String> updateServiceCenter(@PathVariable Long id,
+                                                      @Valid @RequestBody ServiceCenterDTO serviceCenterDTO) {
         logger.info("Updating service center with ID: {}, New details: {}", id, serviceCenterDTO);
         serviceCenterService.updateServiceCenter(id, serviceCenterDTO);
+
         logger.info("Service center updated successfully with ID: {}, New details: {}", id, serviceCenterDTO);
         return ResponseEntity.ok("Service center updated successfully");
     }
 
-    // Get all service centers
     @GetMapping("/getAllServiceCenters")
     public ResponseEntity<List<ServiceCenterDTO>> getAllServiceCenters() {
         logger.info("Fetching all service centers");
         List<ServiceCenterDTO> centers = serviceCenterService.getAllServiceCenters();
+
         logger.info("Fetched {} service centers", centers.size());
         return ResponseEntity.ok(centers);
     }
 
-    // Get service centers by availability
     @GetMapping("/getAvailableServiceCenters")
-    public ResponseEntity<List<ServiceCenterDTO>> getAvailableServiceCenters(@RequestParam(defaultValue = "true") Boolean available) {
+    public ResponseEntity<List<ServiceCenterDTO>> getAvailableServiceCenters(
+            @RequestParam(defaultValue = "true") Boolean available) {
         logger.info("Fetching service centers by availability: {}", available);
         List<ServiceCenterDTO> availableCenters = serviceCenterService.getAvailableServiceCenters(available);
+
         logger.info("Fetched {} available service centers", availableCenters.size());
         return ResponseEntity.ok(availableCenters);
     }
 
-    // Get service center by ID
     @GetMapping("/getServiceCenterById/{id}")
     public ResponseEntity<ServiceCenterDTO> getServiceCenterById(@PathVariable Long id) {
         logger.info("Fetching service center with ID: {}", id);
         ServiceCenterDTO center = serviceCenterService.getServiceCenterById(id);
+
         logger.info("Fetched service center with ID: {}, Details: {}", id, center);
         return ResponseEntity.ok(center);
     }
 
     @PutMapping("/updateStatus/{id}")
-    public ResponseEntity<String> updateStatusOfServiceCenter(@PathVariable Long id, @RequestParam Boolean status) {
+    public ResponseEntity<String> updateStatusOfServiceCenter(@PathVariable Long id,
+                                                              @RequestParam Boolean status) {
         logger.info("Updating status of service center with ID: {}, Status: {}", id, status);
         serviceCenterService.updateStatusOfServiceCenter(id, status);
+
         logger.info("Service center status updated successfully for ID: {}, Status: {}", id, status);
         return ResponseEntity.ok("Service center status updated successfully");
     }

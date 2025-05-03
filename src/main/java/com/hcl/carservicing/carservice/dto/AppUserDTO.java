@@ -1,5 +1,6 @@
 package com.hcl.carservicing.carservice.dto;
 
+import com.hcl.carservicing.carservice.enums.Gender;
 import com.hcl.carservicing.carservice.enums.UserRole;
 
 import jakarta.validation.constraints.Max;
@@ -25,8 +26,8 @@ public class AppUserDTO {
     private Integer age;
 
     @NotNull(message = "Gender is mandatory")
-    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
-    private String gender;
+//    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
+    private Gender gender;
 
     @NotBlank(message = "Contact Number is mandatory")
     @Pattern(regexp = "^[0-9]{10}$", message = "Contact Number must be only 10 digits")
@@ -79,11 +80,11 @@ public class AppUserDTO {
 		this.age = age;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 

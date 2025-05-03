@@ -23,30 +23,30 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/delivery-boys")
 public class DeliveryBoyController {
     private static final Logger logger = LoggerFactory.getLogger(DeliveryBoyController.class);
+
     private final DeliveryBoyService deliveryBoyService;
 
     public DeliveryBoyController(DeliveryBoyService deliveryBoyService) {
         this.deliveryBoyService = deliveryBoyService;
     }
 
-    // Add a new delivery boy
     @PostMapping("/add")
     public ResponseEntity<String> create(@Valid @RequestBody DeliveryBoyDTO deliveryBoyDTO) {
         logger.info("Creating new delivery boy with details: {}", deliveryBoyDTO);
         deliveryBoyService.createDeliveryBoy(deliveryBoyDTO);
+
         logger.info("Delivery boy created successfully with details: {}", deliveryBoyDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("Delivery boy created successfully");
 
     }
 
-    // Update an existing delivery boy by ID
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Long id,
                                          @Valid @RequestBody DeliveryBoyDTO deliveryBoyDTO) {
         logger.info("Updating delivery boy with ID: {}, New details: {}", id, deliveryBoyDTO);
         deliveryBoyService.updateDeliveryBoy(id, deliveryBoyDTO);
-        logger.info("Delivery boy updated successfully with ID: {}, New details: {}", id, deliveryBoyDTO);
 
+        logger.info("Delivery boy updated successfully with ID: {}, New details: {}", id, deliveryBoyDTO);
         return ResponseEntity.ok("Delivery boy updated successfully");
     }
 
@@ -54,8 +54,8 @@ public class DeliveryBoyController {
     public ResponseEntity<List<DeliveryBoyDTO>> byCenter(@PathVariable Long centerId) {
         logger.info("Fetching delivery boys for service center ID: {}", centerId);
         List<DeliveryBoyDTO> list = deliveryBoyService.getDeliveryBoysByCenter(centerId);
-        logger.info("Fetched {} delivery boys for service center ID: {}", list.size(), centerId);
 
+        logger.info("Fetched {} delivery boys for service center ID: {}", list.size(), centerId);
         return ResponseEntity.ok(list);
     }
 
@@ -63,8 +63,8 @@ public class DeliveryBoyController {
     public ResponseEntity<List<DeliveryBoyDTO>> available() {
         logger.info("Fetching all available delivery boys");
         List<DeliveryBoyDTO> list = deliveryBoyService.getAvailableDeliveryBoys();
+
         logger.info("Fetched {} available delivery boys", list.size());
         return ResponseEntity.ok(list);
-
     }
 }

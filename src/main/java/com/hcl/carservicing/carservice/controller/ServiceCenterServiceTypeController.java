@@ -22,47 +22,49 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/service-center-services")
 public class ServiceCenterServiceTypeController {
+
     private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceTypeController.class);
+
     private final ServiceCenterServiceTypeService service;
 
     public ServiceCenterServiceTypeController(ServiceCenterServiceTypeService service) {
         this.service = service;
     }
 
-    // Add service type to service center
     @PostMapping("/add")
     public ResponseEntity<String> add(@Valid @RequestBody ServiceCenterServiceTypeDTO scstDTO) {
         logger.info("Adding service type to service center with details: {}", scstDTO);
         service.addServiceTypeToCenter(scstDTO);
+
         logger.info("Service type assigned to service center successfully with details: {}", scstDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Service type assigned to service center successfully");
     }
 
-    // Update existing service-center service relation
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Long id,
                                          @Valid @RequestBody ServiceCenterServiceTypeDTO scstDTO) {
         logger.info("Updating service-center service relation with ID: {}, New details: {}", id, scstDTO);
         service.updateServiceCenterServiceType(id, scstDTO);
+
         logger.info("Service center service mapping updated successfully for ID: {}, New details: {}", id, scstDTO);
         return ResponseEntity.ok("Service center service mapping updated successfully");
     }
 
-    // Get all services offered by a specific center
     @GetMapping("/byCenter/{centerId}")
     public ResponseEntity<List<ServiceCenterServiceTypeDTO>> byCenter(@PathVariable Long centerId) {
         logger.info("Fetching all services offered by service center with ID: {}", centerId);
         List<ServiceCenterServiceTypeDTO> services = service.getByServiceCenter(centerId);
+
         logger.info("Fetched {} services for service center ID: {}", services.size(), centerId);
         return ResponseEntity.ok(services);
     }
 
-    // Get all centers offering a specific service type
     @GetMapping("/byServiceType/{serviceTypeId}")
     public ResponseEntity<List<ServiceCenterServiceTypeDTO>> byService(@PathVariable Long serviceTypeId) {
         logger.info("Fetching all centers offering service type with ID: {}", serviceTypeId);
         List<ServiceCenterServiceTypeDTO> services = service.getByServiceType(serviceTypeId);
+
         logger.info("Fetched {} centers offering service type ID: {}", services.size(), serviceTypeId);
         return ResponseEntity.ok(services);
     }

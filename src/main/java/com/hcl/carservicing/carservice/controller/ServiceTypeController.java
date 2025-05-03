@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/service-types")
 public class ServiceTypeController {
+
     private static final Logger logger = LoggerFactory.getLogger(ServiceTypeController.class);
 
     private final ServiceTypeService serviceTypeService;
@@ -34,6 +35,7 @@ public class ServiceTypeController {
     public ResponseEntity<String> create(@Valid @RequestBody ServiceTypeDTO serviceTypeDTO) {
         logger.info("Creating new service type with details: {}", serviceTypeDTO);
         serviceTypeService.createServiceType(serviceTypeDTO);
+
         logger.info("Service type created successfully with details: {}", serviceTypeDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Service type created successfully");
@@ -44,24 +46,25 @@ public class ServiceTypeController {
                                          @Valid @RequestBody ServiceTypeDTO serviceTypeDTO) {
         logger.info("Updating service type with ID: {}, New details: {}", id, serviceTypeDTO);
         serviceTypeService.updateServiceType(id, serviceTypeDTO);
+
         logger.info("Service type updated successfully with ID: {}, New details: {}", id, serviceTypeDTO);
         return ResponseEntity.ok("Service type updated successfully");
     }
 
-    // Get service type by ID
     @GetMapping("/getById/{id}")
     public ResponseEntity<ServiceTypeDTO> getById(@PathVariable Long id) {
         logger.info("Fetching service type with ID: {}", id);
         ServiceTypeDTO result = serviceTypeService.getServiceTypeById(id);
+
         logger.info("Fetched service type with ID: {}, Details: {}", id, result);
         return ResponseEntity.ok(result);
     }
 
-    // Get all service types
     @GetMapping("/getAll")
     public ResponseEntity<List<ServiceTypeDTO>> getAll() {
         logger.info("Fetching all service types");
         List<ServiceTypeDTO> list = serviceTypeService.getAllServiceTypes();
+
         logger.info("Fetched {} service types", list.size());
         return ResponseEntity.ok(list);
     }

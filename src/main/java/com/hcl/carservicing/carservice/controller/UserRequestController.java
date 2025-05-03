@@ -21,28 +21,30 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/servicing-request")
 public class UserRequestController {
+
     private static final Logger logger = LoggerFactory.getLogger(UserRequestController.class);
+
     private final ServicingRequestService service;
 
     public UserRequestController(ServicingRequestService service) {
         this.service = service;
     }
 
-    // Create a new servicing request
     @PostMapping("/create")
     public ResponseEntity<String> createRequest(@Valid @RequestBody ServicingRequestDTO requestDTO) {
         logger.info("Creating new servicing request with details: {}", requestDTO);
         service.createRequest(requestDTO);
+
         logger.info("Service request created successfully with details: {}", requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Service request created successfully");
     }
 
-    // Get all servicing requests for a specific user
     @GetMapping("/user/{username}")
     public ResponseEntity<List<ServicingRequestDTO>> getRequestsByUser(@PathVariable String username) {
         logger.info("Fetching servicing requests for user: {}", username);
         List<ServicingRequestDTO> list = service.getRequestsByUser(username);
+
         logger.info("Fetched {} servicing requests for user: {}", list.size(), username);
         return ResponseEntity.ok(list);
     }

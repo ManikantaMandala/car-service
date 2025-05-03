@@ -31,39 +31,35 @@ public class AdminRequestController {
         this.serviceCenterService = serviceCenterService;
     }
 
-    // Update status of a servicing request
     @PutMapping("/updateServiceRequestStatus/{id}")
     public ResponseEntity<String> updateStatus(
             @PathVariable Long id,
             @RequestParam String status,
             @RequestParam(required = false) Long deliveryBoyId) {
-
         logger.info("Updating status of servicing request with ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
         servicingRequestService.updateRequestStatus(id, status, deliveryBoyId);
+
         logger.info("Servicing request status updated successfully for ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
         return ResponseEntity.ok("Servicing request status updated successfully");
     }
 
-    // Get all servicing requests (admin view)
     @GetMapping("/getAllServiceRequests")
     public ResponseEntity<List<ServicingRequestDTO>> getAll() {
         logger.info("Fetching all servicing requests");
         List<ServicingRequestDTO> list = servicingRequestService.getAllRequests();
+
         logger.info("Fetched {} servicing requests", list.size());
         return ResponseEntity.ok(list);
-
     }
 
-    // Update the availability status of a service center
     @PutMapping("/updateServiceCenterStatus")
     public ResponseEntity<String> updateStatusOfServiceCenter(
             @RequestParam Long id,
             @RequestParam Boolean status) {
-
         logger.info("Updating status of service center with ID: {}, Status: {}", id, status);
         serviceCenterService.updateStatusOfServiceCenter(id, status);
+
         logger.info("Service center status updated successfully for ID: {}, Status: {}", id, status);
         return ResponseEntity.ok("Service center status updated successfully");
-
     }
 }
