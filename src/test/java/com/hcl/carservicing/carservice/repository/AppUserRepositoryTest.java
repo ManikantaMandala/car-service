@@ -1,8 +1,8 @@
 package com.hcl.carservicing.carservice.repository;
 
+import com.hcl.carservicing.carservice.enums.Gender;
 import com.hcl.carservicing.carservice.enums.UserRole;
 import com.hcl.carservicing.carservice.model.AppUser;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AppUserRepositoryTest {
@@ -21,7 +20,7 @@ class AppUserRepositoryTest {
     String lastName;
     String username;
     int age;
-    String gender;
+    Gender gender;
     UserRole role;
     String password;
     String contactNumber;
@@ -36,7 +35,7 @@ class AppUserRepositoryTest {
         lastName = "test_user_last_name";
         username = "test_user_name";
         age = 21;
-        gender = "Male";
+        gender = Gender.MALE;
         role = UserRole.USER;
         password = "TestUser!21";
         contactNumber = "1234123412";

@@ -1,8 +1,11 @@
-package com.hcl.carservicing.carservice.exceptionhandler;
+package com.hcl.carservicing.carservice.controller.controlleradvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.hcl.carservicing.carservice.exception.DeliveryBoyNotAvailable;
+import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
+import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -76,6 +79,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DeliveryBoyNotAvailable.class)
+    public ResponseEntity<String> handleDeliveryBoyNotAvailableException(DeliveryBoyNotAvailable ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }
 

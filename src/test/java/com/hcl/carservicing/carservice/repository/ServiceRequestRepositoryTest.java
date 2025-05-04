@@ -1,5 +1,6 @@
 package com.hcl.carservicing.carservice.repository;
 
+import com.hcl.carservicing.carservice.enums.Gender;
 import com.hcl.carservicing.carservice.enums.RequestStatus;
 import com.hcl.carservicing.carservice.enums.UserRole;
 import com.hcl.carservicing.carservice.model.*;
@@ -13,16 +14,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-class ServicingRequestRepositoryTest {
+class ServiceRequestRepositoryTest {
 
     private AppUser appUser;
     private ServiceCenterServiceType serviceCenterServiceType;
 
     @Autowired
-    ServicingRequestRepository servicingRequestRepository;
+    ServiceRequestRepository serviceRequestRepository;
 
     @Autowired
     AppUserRepository appUserRepository;
@@ -44,7 +44,7 @@ class ServicingRequestRepositoryTest {
         appUser.setFirstName("John");
         appUser.setLastName("Doe");
         appUser.setAge(28);
-        appUser.setGender("Male");
+        appUser.setGender(Gender.MALE);
         appUser.setContactNumber("1234567890");
         appUser.setUsername("john_doe_123");
         appUser.setPassword("Password@123");
@@ -84,39 +84,39 @@ class ServicingRequestRepositoryTest {
         serviceCenterServiceType = serviceCenterServiceTypeRepository.save(serviceCenterServiceType);
 
         // Setup ServicingRequest
-        ServicingRequest servicingRequest = new ServicingRequest();
+        ServiceRequest serviceRequest = new ServiceRequest();
 
-        servicingRequest.setUser(appUser);
-        servicingRequest.setStartDate(LocalDate.now().plusDays(1));
-        servicingRequest.setEndDate(LocalDate.now().plusDays(2));
-        servicingRequest.setStatus(RequestStatus.PENDING);
-        servicingRequest.setService(serviceCenterServiceType);
-        servicingRequest.setServiceCenter(serviceCenter);
+        serviceRequest.setUser(appUser);
+        serviceRequest.setStartDate(LocalDate.now().plusDays(1));
+        serviceRequest.setEndDate(LocalDate.now().plusDays(2));
+        serviceRequest.setStatus(RequestStatus.PENDING);
+        serviceRequest.setService(serviceCenterServiceType);
+        serviceRequest.setServiceCenter(serviceCenter);
 
-        servicingRequest = servicingRequestRepository.save(servicingRequest);
+        serviceRequest = serviceRequestRepository.save(serviceRequest);
     }
 
     @Test
     void findByUserUsernameReturnsServicingRequests() {
-        List<ServicingRequest> servicingRequests = servicingRequestRepository.findByUserUsername(appUser.getUsername());
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findByUserUsername(appUser.getUsername());
 
-        assertThat(servicingRequests).isNotEmpty();
-        assertThat(servicingRequests.get(0).getUser().getUsername()).isEqualTo(appUser.getUsername());
+        assertThat(serviceRequests).isNotEmpty();
+        assertThat(serviceRequests.get(0).getUser().getUsername()).isEqualTo(appUser.getUsername());
     }
 
     @Test
     void findByUserUsernameReturnsEmpty() {
-        List<ServicingRequest> servicingRequests = servicingRequestRepository.findByUserUsername("nonexistentuser");
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findByUserUsername("nonexistentuser");
 
-        assertThat(servicingRequests).isEmpty();
+        assertThat(serviceRequests).isEmpty();
     }
 
     @Test
     void findByUserUsernameReturnsCorrectServicingRequest() {
-        List<ServicingRequest> servicingRequests = servicingRequestRepository.findByUserUsername(appUser.getUsername());
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findByUserUsername(appUser.getUsername());
 
-        assertThat(servicingRequests).hasSize(1);
-        ServicingRequest request = servicingRequests.get(0);
+        assertThat(serviceRequests).hasSize(1);
+        ServiceRequest request = serviceRequests.get(0);
         assertThat(request.getUser().getUsername()).isEqualTo(appUser.getUsername());
         assertThat(request.getService()).isEqualTo(serviceCenterServiceType);
         assertThat(request.getStatus()).isEqualTo(RequestStatus.PENDING);

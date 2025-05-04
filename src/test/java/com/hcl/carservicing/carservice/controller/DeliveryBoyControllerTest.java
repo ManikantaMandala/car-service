@@ -1,8 +1,8 @@
 package com.hcl.carservicing.carservice.controller;
 
 import com.hcl.carservicing.carservice.dto.DeliveryBoyDTO;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
+import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
+import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.service.DeliveryBoyService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

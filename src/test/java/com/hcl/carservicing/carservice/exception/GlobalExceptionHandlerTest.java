@@ -1,15 +1,13 @@
-package com.hcl.carservicing.carservice.exceptionhandler;
+package com.hcl.carservicing.carservice.exception;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.hcl.carservicing.carservice.controller.controlleradvice.GlobalExceptionHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import jakarta.validation.ValidationException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

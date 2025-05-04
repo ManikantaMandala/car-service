@@ -37,7 +37,6 @@ public class AppUser {
     private Integer age;
     
     @NotNull(message = "Gender is mandatory")
-//    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
     private Gender gender;
     
     @NotBlank(message = "Contact Number is mandatory")
@@ -50,9 +49,6 @@ public class AppUser {
     @NotBlank(message = "Username is mandatory")
     private String username;
 
-//    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,18}$",
-//            message = "Password must be between 8 and 18 characters and contain at least one uppercase letter,"
-//            		+ " one lowercase letter, one digit, and one special character")
     private String password;
 
     @NotNull(message = "Role is mandatory")
@@ -64,7 +60,7 @@ public class AppUser {
 
 	@OneToMany(mappedBy = "user",fetch = FetchType.EAGER,
 		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private List<ServicingRequest> servicingRequests;
+	private List<ServiceRequest> serviceRequests;
 
 	public Long getId() {
 		return user_id;
@@ -145,5 +141,23 @@ public class AppUser {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+
+	@Override
+	public String toString() {
+		return "AppUser{" +
+				"user_id=" + user_id +
+				", firstName='" + firstName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", age=" + age +
+				", gender=" + gender +
+				", contactNumber='" + contactNumber + '\'' +
+				", username='" + username + '\'' +
+				", role=" + role +
+				", createdAt=" + createdAt +
+				", servicingRequests=" + serviceRequests +
+				'}';
+	}
+
 }
 	

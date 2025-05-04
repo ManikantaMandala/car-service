@@ -1,23 +1,27 @@
 package com.hcl.carservicing.carservice.service.impl;
 
+import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
+import com.hcl.carservicing.carservice.dao.service.ServiceCenterServiceTypeDaoService;
+import com.hcl.carservicing.carservice.dao.service.ServiceTypeDaoService;
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.dto.ServiceCenterServiceTypeDTO;
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
+import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
+import com.hcl.carservicing.carservice.mapper.ServiceCenterMapper;
+import com.hcl.carservicing.carservice.mapper.ServiceCenterServiceTypeMapper;
+import com.hcl.carservicing.carservice.mapper.ServiceTypeMapper;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
 import com.hcl.carservicing.carservice.model.ServiceCenterServiceType;
 import com.hcl.carservicing.carservice.model.ServiceType;
 import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
 import com.hcl.carservicing.carservice.repository.ServiceCenterServiceTypeRepository;
 import com.hcl.carservicing.carservice.repository.ServiceTypeRepository;
-import com.hcl.carservicing.carservice.service.ServiceCenterServiceTypeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +39,15 @@ class ServiceCenterServiceTypeServiceImplTest {
 
     @Mock
     ServiceTypeRepository serviceTypeRepository;
+
+    @Mock
+    ServiceTypeDaoService serviceTypeDaoService;
+
+    @Mock
+    ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService;
+
+    @Mock
+    ServiceCenterDaoService serviceCenterDaoService;
 
     @InjectMocks
     ServiceCenterServiceTypeServiceImpl serviceCenterServiceTypeService;
@@ -83,17 +96,21 @@ class ServiceCenterServiceTypeServiceImplTest {
         ServiceCenter serviceCenter = createSampleServiceCenter();
         ServiceType serviceType = createSampleServiceType();
 
-        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(serviceCenter));
-        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(Optional.of(serviceType));
+//        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(serviceCenter));
+        when(serviceCenterDaoService.findById(dto.getServiceCenterId())).thenReturn(serviceCenter);
+//        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(serviceType);
+        when(serviceTypeDaoService.findById(dto.getServiceTypeId())).thenReturn(serviceType);
 
         ServiceCenterServiceType savedEntity = new ServiceCenterServiceType();
         savedEntity.setId(1L);
 
-        when(serviceCenterServiceTypeRepository.save(any(ServiceCenterServiceType.class))).thenReturn(savedEntity);
+//        when(serviceCenterServiceTypeRepository.save(any(ServiceCenterServiceType.class))).thenReturn(savedEntity);
+        when(serviceCenterServiceTypeDaoService.save(any(ServiceCenterServiceType.class))).thenReturn(savedEntity);
 
         serviceCenterServiceTypeService.addServiceTypeToCenter(dto);
 
-        verify(serviceCenterServiceTypeRepository).save(any(ServiceCenterServiceType.class));
+//        verify(serviceCenterServiceTypeRepository).save(any(ServiceCenterServiceType.class));
+        verify(serviceCenterServiceTypeDaoService).save(any(ServiceCenterServiceType.class));
     }
 
 
@@ -105,15 +122,22 @@ class ServiceCenterServiceTypeServiceImplTest {
         ServiceCenterServiceType existing = new ServiceCenterServiceType();
         existing.setId(id);
 
-        when(serviceCenterServiceTypeRepository.findById(id)).thenReturn(Optional.of(existing));
-        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(createSampleServiceCenter()));
-        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(Optional.of(createSampleServiceType()));
+//        when(serviceCenterServiceTypeRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(serviceCenterServiceTypeDaoService.findById(id)).thenReturn(existing);
+//        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(createSampleServiceCenter()));
+        when(serviceCenterDaoService.findById(dto.getServiceCenterId())).thenReturn(createSampleServiceCenter());
+//        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(Optional.of(createSampleServiceType()));
+        when(serviceTypeDaoService.findById(dto.getServiceTypeId())).thenReturn(createSampleServiceType());
 
-        when(serviceCenterServiceTypeRepository.save(any(ServiceCenterServiceType.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(serviceCenterServiceTypeDaoService.save(any(ServiceCenterServiceType.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+//        when(serviceCenterServiceTypeRepository.save(any(ServiceCenterServiceType.class)))
+//                .thenAnswer(invocation -> invocation.getArgument(0));
 
         serviceCenterServiceTypeService.updateServiceCenterServiceType(id, dto);
 
-        verify(serviceCenterServiceTypeRepository).save(existing);
+//        verify(serviceCenterServiceTypeRepository).save(existing);
+        verify(serviceCenterServiceTypeDaoService).save(existing);
     }
 
     @Test
@@ -121,7 +145,8 @@ class ServiceCenterServiceTypeServiceImplTest {
         Long id = 99L;
         ServiceCenterServiceTypeDTO dto = createSampleDTO();
 
-        when(serviceCenterServiceTypeRepository.findById(id)).thenReturn(Optional.empty());
+//        when(serviceCenterServiceTypeRepository.findById(id)).thenReturn(Optional.empty());
+        when(serviceCenterServiceTypeDaoService.findById(id)).thenReturn(null);
 
         Exception exception = assertThrows(ElementNotFoundException.class, () ->
                 serviceCenterServiceTypeService.updateServiceCenterServiceType(id, dto));
@@ -134,7 +159,8 @@ class ServiceCenterServiceTypeServiceImplTest {
 
         Long serviceCenterId = 1L;
         ServiceCenterServiceType entity = createSampleEntity();
-        when(serviceCenterServiceTypeRepository.findByServiceCenterId(serviceCenterId)).thenReturn(List.of(entity));
+//        when(serviceCenterServiceTypeRepository.findByServiceCenterId(serviceCenterId)).thenReturn(List.of(entity));
+        when(serviceCenterServiceTypeDaoService.findByServiceCenterId(serviceCenterId)).thenReturn(List.of(entity));
 
         List<ServiceCenterServiceTypeDTO> result = serviceCenterServiceTypeService.getByServiceCenter(serviceCenterId);
 
@@ -146,7 +172,8 @@ class ServiceCenterServiceTypeServiceImplTest {
     void getByServiceType() {
         Long serviceTypeId = 1L;
         ServiceCenterServiceType entity = createSampleEntity();
-        when(serviceCenterServiceTypeRepository.findByServiceTypeId(serviceTypeId)).thenReturn(List.of(entity));
+//        when(serviceCenterServiceTypeRepository.findByServiceTypeId(serviceTypeId)).thenReturn(List.of(entity));
+        when(serviceCenterServiceTypeDaoService.findByServiceTypeId(serviceTypeId)).thenReturn(List.of(entity));
 
         List<ServiceCenterServiceTypeDTO> result = serviceCenterServiceTypeService.getByServiceType(serviceTypeId);
 
@@ -157,8 +184,10 @@ class ServiceCenterServiceTypeServiceImplTest {
     @Test
     void testConvertToEntity_ServiceCenterServiceTypeDTO_success() {
         ServiceCenterServiceTypeDTO dto = createSampleDTO();
-        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(createSampleServiceCenter()));
-        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(Optional.of(createSampleServiceType()));
+//        when(serviceCenterRepository.findById(dto.getServiceCenterId())).thenReturn(Optional.of(createSampleServiceCenter()));
+//        when(serviceTypeRepository.findById(dto.getServiceTypeId())).thenReturn(Optional.of(createSampleServiceType()));
+        when(serviceCenterDaoService.findById(dto.getServiceCenterId())).thenReturn(createSampleServiceCenter());
+        when(serviceTypeDaoService.findById(dto.getServiceTypeId())).thenReturn(createSampleServiceType());
 
         ServiceCenterServiceType entity = serviceCenterServiceTypeService.convertToEntity(dto);
 
@@ -177,7 +206,7 @@ class ServiceCenterServiceTypeServiceImplTest {
         serviceCenterDTO.setRating(4.5);
         serviceCenterDTO.setAvailable(true);
 
-        ServiceCenter center = serviceCenterServiceTypeService.convertToEntity(serviceCenterDTO);
+        ServiceCenter center = ServiceCenterMapper.convertToEntity(serviceCenterDTO);
 
         assertNotNull(center);
         assertEquals(serviceCenterDTO.getName(), center.getName());
@@ -192,7 +221,7 @@ class ServiceCenterServiceTypeServiceImplTest {
         serviceTypeDTO.setId(1L);
         serviceTypeDTO.setServiceName("Oil Change");
 
-        ServiceType serviceType = serviceCenterServiceTypeService.convertToEntity(serviceTypeDTO);
+        ServiceType serviceType = ServiceTypeMapper.convertToEntity(serviceTypeDTO);
 
         assertNotNull(serviceType);
         assertEquals(serviceTypeDTO.getServiceName(), serviceType.getServiceName());
@@ -202,7 +231,7 @@ class ServiceCenterServiceTypeServiceImplTest {
     void testConvertToDTO_success() {
         ServiceCenterServiceType entity = createSampleEntity();
 
-        ServiceCenterServiceTypeDTO dto = serviceCenterServiceTypeService.convertToDTO(entity);
+        ServiceCenterServiceTypeDTO dto = ServiceCenterServiceTypeMapper.convertToDTO(entity);
 
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
@@ -225,8 +254,10 @@ class ServiceCenterServiceTypeServiceImplTest {
         ServiceType serviceType = new ServiceType();
         serviceType.setId(3L);
 
-        when(serviceCenterRepository.findById(2L)).thenReturn(Optional.of(serviceCenter));
-        when(serviceTypeRepository.findById(3L)).thenReturn(Optional.of(serviceType));
+//        when(serviceCenterRepository.findById(2L)).thenReturn(Optional.of(serviceCenter));
+//        when(serviceTypeRepository.findById(3L)).thenReturn(Optional.of(serviceType));
+        when(serviceCenterDaoService.findById(2L)).thenReturn(serviceCenter);
+        when(serviceTypeDaoService.findById(3L)).thenReturn(serviceType);
 
         ServiceCenterServiceType entity = serviceCenterServiceTypeService.convertToEntity(dto);
 
@@ -245,7 +276,8 @@ class ServiceCenterServiceTypeServiceImplTest {
         dto.setServiceTypeId(3L);
         dto.setCost(100.00);
 
-        when(serviceCenterRepository.findById(2L)).thenReturn(Optional.empty());
+//        when(serviceCenterRepository.findById(2L)).thenReturn(Optional.empty());
+        when(serviceCenterDaoService.findById(2L)).thenReturn(null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             serviceCenterServiceTypeService.convertToEntity(dto);
@@ -265,6 +297,8 @@ class ServiceCenterServiceTypeServiceImplTest {
         ServiceCenter serviceCenter = new ServiceCenter();
         serviceCenter.setId(2L);
 
+//        when(serviceCenterRepository.findById(2L)).thenReturn(Optional.of(serviceCenter));
+//        when(serviceTypeRepository.findById(3L)).thenReturn(Optional.empty());
         when(serviceCenterRepository.findById(2L)).thenReturn(Optional.of(serviceCenter));
         when(serviceTypeRepository.findById(3L)).thenReturn(Optional.empty());
 
@@ -290,7 +324,7 @@ class ServiceCenterServiceTypeServiceImplTest {
 
         entity.setCost(100.00);
 
-        ServiceCenterServiceTypeDTO dto = serviceCenterServiceTypeService.convertToDTO(entity);
+        ServiceCenterServiceTypeDTO dto = ServiceCenterServiceTypeMapper.convertToDTO(entity);
 
         assertNotNull(dto);
         assertEquals(entity.getId(), dto.getId());
@@ -308,7 +342,7 @@ class ServiceCenterServiceTypeServiceImplTest {
         dto.setRating(4.5);
         dto.setAvailable(true);
 
-        ServiceCenter entity = serviceCenterServiceTypeService.convertToEntity(dto);
+        ServiceCenter entity = ServiceCenterMapper.convertToEntity(dto);
 
         assertNotNull(entity);
         assertEquals(dto.getId(), entity.getId());
@@ -324,7 +358,7 @@ class ServiceCenterServiceTypeServiceImplTest {
         dto.setId(1L);
         dto.setServiceName("Oil Change");
 
-        ServiceType entity = serviceCenterServiceTypeService.convertToEntity(dto);
+        ServiceType entity = ServiceTypeMapper.convertToEntity(dto);
 
         assertNotNull(entity);
         assertEquals(dto.getId(), entity.getId());

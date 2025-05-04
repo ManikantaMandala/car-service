@@ -1,7 +1,7 @@
 package com.hcl.carservicing.carservice.controller;
 
-import com.hcl.carservicing.carservice.dto.ServicingRequestDTO;
-import com.hcl.carservicing.carservice.service.ServicingRequestService;
+import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
+import com.hcl.carservicing.carservice.service.ServiceRequestService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class UserRequestControllerTest {
 
 	@Mock
-	private ServicingRequestService service;
+	private ServiceRequestService service;
 
 	@InjectMocks
 	private UserRequestController userRequestController;
@@ -32,7 +32,7 @@ class UserRequestControllerTest {
 	@Test
 	void testCreateRequest_Success() {
 		// Arrange
-		ServicingRequestDTO requestDTO = new ServicingRequestDTO();
+		ServiceRequestDTO requestDTO = new ServiceRequestDTO();
 
 		requestDTO.setUsername("testUser");
 		requestDTO.setServiceCenterId(1L);
@@ -50,7 +50,7 @@ class UserRequestControllerTest {
 	@Test
 	void testCreateRequest_InvalidInput() {
 		// Arrange
-		ServicingRequestDTO requestDTO = new ServicingRequestDTO();
+		ServiceRequestDTO requestDTO = new ServiceRequestDTO();
 
 		requestDTO.setUsername(null); // Invalid input, userName is @NotNull
 		requestDTO.setServiceCenterId(1L);
@@ -68,7 +68,7 @@ class UserRequestControllerTest {
 	@Test
 	void testCreateRequest_WithZeroServiceId() {
 		// Arrange
-		ServicingRequestDTO requestDTO = new ServicingRequestDTO();
+		ServiceRequestDTO requestDTO = new ServiceRequestDTO();
 
 		requestDTO.setUsername("testUser");
 		requestDTO.setServiceCenterId(0L);
@@ -87,8 +87,8 @@ class UserRequestControllerTest {
 	void testGetRequestsByUser_ExistingUser() {
 		// Arrange
 		String username = "testUser";
-		List<ServicingRequestDTO> requestList = new ArrayList<>();
-		ServicingRequestDTO requestDTO = new ServicingRequestDTO();
+		List<ServiceRequestDTO> requestList = new ArrayList<>();
+		ServiceRequestDTO requestDTO = new ServiceRequestDTO();
 
 		requestDTO.setUsername(username);
 		requestDTO.setServiceCenterId(1L);
@@ -98,7 +98,7 @@ class UserRequestControllerTest {
 		when(service.getRequestsByUser(username)).thenReturn(requestList);
 
 		// Act
-		ResponseEntity<List<ServicingRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
+		ResponseEntity<List<ServiceRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -111,12 +111,12 @@ class UserRequestControllerTest {
 	void testGetRequestsByUser_NoRequests() {
 		// Arrange
 		String username = "testUser";
-		List<ServicingRequestDTO> emptyList = new ArrayList<>();
+		List<ServiceRequestDTO> emptyList = new ArrayList<>();
 
 		when(service.getRequestsByUser(username)).thenReturn(emptyList);
 
 		// Act
-		ResponseEntity<List<ServicingRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
+		ResponseEntity<List<ServiceRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -129,12 +129,12 @@ class UserRequestControllerTest {
 	void testGetRequestsByUser_DifferentUser() {
 		// Arrange
 		String username = "anotherUser";
-		List<ServicingRequestDTO> emptyList = new ArrayList<>();
+		List<ServiceRequestDTO> emptyList = new ArrayList<>();
 
 		when(service.getRequestsByUser(username)).thenReturn(emptyList);
 
 		// Act
-		ResponseEntity<List<ServicingRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
+		ResponseEntity<List<ServiceRequestDTO>> responseEntity = userRequestController.getRequestsByUser(username);
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

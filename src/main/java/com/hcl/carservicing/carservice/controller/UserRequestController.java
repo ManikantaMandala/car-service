@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hcl.carservicing.carservice.dto.ServicingRequestDTO;
-import com.hcl.carservicing.carservice.service.ServicingRequestService;
+import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
+import com.hcl.carservicing.carservice.service.ServiceRequestService;
 
 import jakarta.validation.Valid;
 
@@ -24,14 +24,14 @@ public class UserRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRequestController.class);
 
-    private final ServicingRequestService service;
+    private final ServiceRequestService service;
 
-    public UserRequestController(ServicingRequestService service) {
+    public UserRequestController(ServiceRequestService service) {
         this.service = service;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createRequest(@Valid @RequestBody ServicingRequestDTO requestDTO) {
+    public ResponseEntity<String> createRequest(@Valid @RequestBody ServiceRequestDTO requestDTO) {
         logger.info("Creating new servicing request with details: {}", requestDTO);
         service.createRequest(requestDTO);
 
@@ -41,9 +41,9 @@ public class UserRequestController {
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<List<ServicingRequestDTO>> getRequestsByUser(@PathVariable String username) {
+    public ResponseEntity<List<ServiceRequestDTO>> getRequestsByUser(@PathVariable String username) {
         logger.info("Fetching servicing requests for user: {}", username);
-        List<ServicingRequestDTO> list = service.getRequestsByUser(username);
+        List<ServiceRequestDTO> list = service.getRequestsByUser(username);
 
         logger.info("Fetched {} servicing requests for user: {}", list.size(), username);
         return ResponseEntity.ok(list);

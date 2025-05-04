@@ -2,16 +2,7 @@ package com.hcl.carservicing.carservice.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -37,8 +28,10 @@ public class DeliveryBoy {
     private ServiceCenter serviceCenter;
 
     @OneToMany(mappedBy = "deliveryBoy", 
-    		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<ServicingRequest> servicingRequest;
+    		cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+			fetch = FetchType.EAGER
+	)
+    private List<ServiceRequest> serviceRequests;
 
     private Boolean available = true;
 
@@ -74,12 +67,12 @@ public class DeliveryBoy {
 		this.contactNumber = contactNumber;
 	}
 
-	public List<ServicingRequest> getServicingRequest() {
-		return servicingRequest;
+	public List<ServiceRequest> getServicingRequest() {
+		return serviceRequests;
 	}
 
-	public void setServicingRequest(List<ServicingRequest> servicingRequest) {
-		this.servicingRequest = servicingRequest;
+	public void setServicingRequest(List<ServiceRequest> serviceRequest) {
+		this.serviceRequests = serviceRequest;
 	}
 
 	public ServiceCenter getServiceCenter() {

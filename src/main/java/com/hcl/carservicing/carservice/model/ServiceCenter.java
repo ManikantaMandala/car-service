@@ -38,7 +38,7 @@ public class ServiceCenter {
 
     @OneToMany(mappedBy = "serviceCenter", 
     		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<ServicingRequest> servicingRequests;
+    private List<ServiceRequest> serviceRequests;
 
     @OneToMany(mappedBy = "serviceCenter", fetch = FetchType.EAGER,
     		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -90,12 +90,12 @@ public class ServiceCenter {
 		this.available = available;
 	}
 
-	public List<ServicingRequest> getServicingRequests() {
-		return servicingRequests;
+	public List<ServiceRequest> getServicingRequests() {
+		return serviceRequests;
 	}
 
-	public void setServicingRequests(List<ServicingRequest> servicingRequests) {
-		this.servicingRequests = servicingRequests;
+	public void setServicingRequests(List<ServiceRequest> serviceRequests) {
+		this.serviceRequests = serviceRequests;
 	}
 
 	public List<ServiceCenterServiceType> getServiceCenterServiceTypes() {

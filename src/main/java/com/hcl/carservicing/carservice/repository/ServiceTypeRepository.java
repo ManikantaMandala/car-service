@@ -7,5 +7,4 @@ import com.hcl.carservicing.carservice.model.ServiceType;
 
 @Repository
 public interface ServiceTypeRepository extends JpaRepository<ServiceType, Long> {
-    // Additional query methods if needed
 }

@@ -23,17 +23,17 @@ public class ServiceCenterDTO {
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating must be at most 5.0")
     private Double rating;
     
-    private List<ServicingRequestDTO> servicingRequests;
+    private List<ServiceRequestDTO> servicingRequests;
     
     private List<ServiceCenterServiceTypeDTO> serviceCenterServiceTypes;
     
     private List<DeliveryBoyDTO> deliveryBoys;
 
-	public List<ServicingRequestDTO> getServicingRequests() {
+	public List<ServiceRequestDTO> getServicingRequests() {
 		return servicingRequests;
 	}
 
-	public void setServicingRequests(List<ServicingRequestDTO> servicingRequests) {
+	public void setServicingRequests(List<ServiceRequestDTO> servicingRequests) {
 		this.servicingRequests = servicingRequests;
 	}
 

@@ -1,10 +1,10 @@
 package com.hcl.carservicing.carservice.controller;
 
-import com.hcl.carservicing.carservice.dto.ServicingRequestDTO;
+import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
 import com.hcl.carservicing.carservice.enums.RequestStatus;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
+import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.service.ServiceCenterService;
-import com.hcl.carservicing.carservice.service.ServicingRequestService;
+import com.hcl.carservicing.carservice.service.ServiceRequestService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +27,7 @@ class AdminRequestControllerTest {
 	ServiceCenterService serviceCenterService;
 
 	@Mock
-	ServicingRequestService servicingRequestService;
+	ServiceRequestService serviceRequestService;
 
 	@InjectMocks
 	AdminRequestController adminRequestController;
@@ -35,7 +35,7 @@ class AdminRequestControllerTest {
 	@Test
 	void updateStatusWithOkStatus() {
 		Long requestId = 1L;
-		String status = "ACCEPTED";
+		RequestStatus status = RequestStatus.ACCEPTED;
 		Long deliveryBoyId = 1L;
 
 		Long serviceId = 1L;
@@ -44,74 +44,74 @@ class AdminRequestControllerTest {
 		LocalDate startDate = LocalDate.now();
 		LocalDate endDate = startDate.plusDays(2);
 
-		ServicingRequestDTO servicingRequestDTO = new ServicingRequestDTO();
-		servicingRequestDTO.setId(requestId);
-		servicingRequestDTO.setStatus(RequestStatus.valueOf(status));
-		servicingRequestDTO.setStartDate(startDate);
-		servicingRequestDTO.setEndDate(endDate);
-		servicingRequestDTO.setUsername(username);
-		servicingRequestDTO.setServiceId(serviceId);
-		servicingRequestDTO.setServiceCenterId(serviceCenterId);
-		servicingRequestDTO.setDeliveryBoyId(deliveryBoyId);
+		ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
+		serviceRequestDTO.setId(requestId);
+		serviceRequestDTO.setStatus(status);
+		serviceRequestDTO.setStartDate(startDate);
+		serviceRequestDTO.setEndDate(endDate);
+		serviceRequestDTO.setUsername(username);
+		serviceRequestDTO.setServiceId(serviceId);
+		serviceRequestDTO.setServiceCenterId(serviceCenterId);
+		serviceRequestDTO.setDeliveryBoyId(deliveryBoyId);
 
-		when(servicingRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
-				.thenReturn(servicingRequestDTO);
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+				.thenReturn(serviceRequestDTO);
 
 		ResponseEntity<String> result = adminRequestController.updateStatus(requestId, status, deliveryBoyId);
 
 		assertNotNull(result);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertEquals("Servicing request status updated successfully", result.getBody());
-		verify(servicingRequestService, times(1))
+		verify(serviceRequestService, times(1))
 				.updateRequestStatus(requestId, status, deliveryBoyId);
 	}
 
 	@Test
 	void updateStatusWhichThrowsElementNotFoundExceptionForServicingRequest() {
 		Long requestId = 100L;
-		String status = "ACCEPTED";
+		RequestStatus status = RequestStatus.ACCEPTED;
 		Long deliveryBoyId = 1L;
 
-		when(servicingRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
 				.thenThrow(new ElementNotFoundException("Request not found: " + requestId));
 
 		ElementNotFoundException thrownException = assertThrows(ElementNotFoundException.class,
 				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId));
 
 		assertEquals("Request not found: " + requestId, thrownException.getMessage());
-		verify(servicingRequestService, times(1))
+		verify(serviceRequestService, times(1))
 				.updateRequestStatus(requestId, status, deliveryBoyId);
 	}
 
 	@Test
 	void updateStatusWhichThrowsElementNotFoundExceptionForDeliveryBoy() {
 		Long requestId = 100L;
-		String status = "ACCEPTED";
+		RequestStatus status = RequestStatus.ACCEPTED;
 		Long deliveryBoyId = 1L;
 
-		when(servicingRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
 				.thenThrow(new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId));
 
 		ElementNotFoundException thrownException = assertThrows(ElementNotFoundException.class,
 				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId));
 
 		assertEquals("Delivery boy not found: " + deliveryBoyId, thrownException.getMessage());
-		verify(servicingRequestService, times(1))
+		verify(serviceRequestService, times(1))
 				.updateRequestStatus(requestId, status, deliveryBoyId);
 	}
 
 	@Test
 	void getAllWithOkStatus() {
-		List<ServicingRequestDTO> resultBody = new ArrayList<>();
+		List<ServiceRequestDTO> resultBody = new ArrayList<>();
 
-		when(servicingRequestService.getAllRequests()).thenReturn(resultBody);
+		when(serviceRequestService.getAllRequests()).thenReturn(resultBody);
 
-		ResponseEntity<List<ServicingRequestDTO>> result = adminRequestController.getAll();
+		ResponseEntity<List<ServiceRequestDTO>> result = adminRequestController.getAll();
 
 		assertNotNull(result);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertEquals(resultBody, result.getBody());
-		verify(servicingRequestService, times(1)).getAllRequests();
+		verify(serviceRequestService, times(1)).getAllRequests();
 	}
 
 	@Test

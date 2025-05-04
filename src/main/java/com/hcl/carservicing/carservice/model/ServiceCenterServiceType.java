@@ -25,7 +25,7 @@ public class ServiceCenterServiceType {
 
     @OneToMany(mappedBy = "service", 
     		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<ServicingRequest> servicingRequest;
+    private List<ServiceRequest> serviceRequest;
 
 	public Long getId() {
 		return id;

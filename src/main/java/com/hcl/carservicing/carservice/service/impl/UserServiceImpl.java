@@ -1,16 +1,16 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Optional;
 
 import com.hcl.carservicing.carservice.config.CustomUserDetailsService;
 import com.hcl.carservicing.carservice.config.JwtUtil;
-import com.hcl.carservicing.carservice.config.SecurityConfig;
+import com.hcl.carservicing.carservice.dao.service.AppUserDaoService;
 import com.hcl.carservicing.carservice.dto.UserLoginDTO;
-import com.hcl.carservicing.carservice.enums.UserRole;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementAlreadyExistException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
+import com.hcl.carservicing.carservice.mapper.AppUserMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,17 +26,21 @@ import com.hcl.carservicing.carservice.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final AppUserRepository userRepository;
+    private final AppUserDaoService appUserDaoService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public UserServiceImpl(AppUserRepository userRepository,
+    public UserServiceImpl(AppUserRepository userRepository, AppUserDaoService appUserDaoService,
                            JwtUtil jwtUtil,
                            CustomUserDetailsService customUserDetailsService,
                            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.appUserDaoService = appUserDaoService;
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoder = passwordEncoder;
@@ -46,46 +50,38 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void register(AppUserDTO userDTO) {
-        // Check for existing username
-        Optional<AppUser> existing = userRepository.findByUsername(userDTO.getUsername());
-        if (existing.isPresent()) {
-            throw new ElementAlreadyExistException("Username already exists: " + userDTO.getUsername());
-        }
-        // Check for existing contact number
-        Optional<AppUser> existingContactNumber = userRepository.findByContactNumber(userDTO.getContactNumber());
-        if (existingContactNumber.isPresent()) {
-            throw new ElementAlreadyExistException("Contact Number already exists: " + userDTO.getContactNumber());
-        }
+        appUserDaoService.throwIfUsernameExists(userDTO.getUsername());
+        appUserDaoService.throwIfContactExists(userDTO.getContactNumber());
 
-        AppUser user = new AppUser();
+        AppUser user = AppUserMapper.toEntity(userDTO);
 
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setAge(userDTO.getAge());
-        user.setGender(userDTO.getGender());
-        user.setContactNumber(userDTO.getContactNumber());
-        user.setUsername(userDTO.getUsername());
+        logger.info("user dto converted to AppUser: {}", user);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRole(userDTO.getRole());
 
-        userRepository.save(user);
+        appUserDaoService.save(user);
+        logger.info("user save with username: {}", user.getUsername());
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserLoginDTO login(String username, String password) {
+        logger.info("user details received");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
 
         if(!authentication.isAuthenticated()) {
+            logger.warn("Invalid credentials");
             throw new IllegalArgumentException("Invalid credentials");
         }
+        logger.info("User authenticated successfully");
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        logger.info("User details: {}", userDetails);
 
         String token = jwtUtil.generateToken(userDetails.getUsername());
         Date expirationTime = jwtUtil.extractExpiration(token);
+        logger.info("User jwt token: {}, with expiration time: {}", token, expirationTime);
 
         return new UserLoginDTO(token, expirationTime);
     }

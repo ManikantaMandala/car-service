@@ -2,6 +2,7 @@ package com.hcl.carservicing.carservice.controller;
 
 import com.hcl.carservicing.carservice.dto.AppUserDTO;
 import com.hcl.carservicing.carservice.dto.UserLoginDTO;
+import com.hcl.carservicing.carservice.dto.UserLoginRequestDTO;
 import com.hcl.carservicing.carservice.enums.UserRole;
 import com.hcl.carservicing.carservice.service.UserService;
 import com.hcl.carservicing.carservice.config.JwtUtil;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows; // Import assertThrows
@@ -91,7 +91,7 @@ class UserControllerTest {
 
 	void testLogin_Success() {
 		// Arrange
-		String userId = "testUser";
+		String username = "testUser";
 		String password = "password";
 		String token = "mockedToken";
 		UserRole role = UserRole.USER;
@@ -100,63 +100,68 @@ class UserControllerTest {
 //		HashMap<String, UserRole> authorities = new HashMap<>();
 //		authorities.put("role", role);
 
+		UserLoginRequestDTO userLoginRequestDTO = new UserLoginRequestDTO(username, password);
+
 		UserLoginDTO userLoginDTO = new UserLoginDTO(token, expiration);
 
-		when(userService.login(userId, password)).thenReturn(userLoginDTO);
-		when(jwtUtil.generateToken(userId)).thenReturn(token);
+		when(userService.login(username, password)).thenReturn(userLoginDTO);
+		when(jwtUtil.generateToken(username)).thenReturn(token);
 
 		// Act
-		ResponseEntity<UserLoginDTO> responseEntity = userController.login(userId, password);
+		ResponseEntity<UserLoginDTO> responseEntity = userController.login(userLoginRequestDTO);
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(userLoginDTO, responseEntity.getBody());
 
-		verify(userService, times(1)).login(userId, password);
+		verify(userService, times(1)).login(username, password);
 	}
 
 	@Test
 	void testLogin_InvalidCredentials() {
 
 		// Arrange
-		String userId = "invalidUser";
+		String username = "invalidUser";
 		String password = "wrongPassword";
 
+		UserLoginRequestDTO userLoginRequestDTO = new UserLoginRequestDTO(username, password);
+
 		doThrow(new RuntimeException("Invalid credentials"))
-				.when(userService).login(userId, password);
+				.when(userService).login(username, password);
 
 		// Act & Assert
-		assertThrows(RuntimeException.class, () -> userController.login(userId, password)); // Use assertThrows
+		assertThrows(RuntimeException.class,
+				() -> userController.login(userLoginRequestDTO)); // Use assertThrows
 
-		verify(userService, times(1)).login(userId, password);
+		verify(userService, times(1)).login(username, password);
 //		verify(jwtUtil, times(0)).generateToken(userId, new HashMap<>());
-		verify(jwtUtil, times(0)).generateToken(userId);
+		verify(jwtUtil, times(0)).generateToken(username);
 	}
 
 	@Test
-
 	void testLogin_EmptyUserId() {
 
 		// Arrange
-		String userId = "";
+		String username = "";
 		String password = "password";
 		String token = "mockedToken";
 		Date expiration = new Date();
 
+		UserLoginRequestDTO userLoginRequestDTO = new UserLoginRequestDTO(username, password);
 		UserLoginDTO userLoginDTO = new UserLoginDTO(token, expiration);
 
-		when(userService.login(userId, password)).thenReturn(userLoginDTO);
-		when(jwtUtil.generateToken(userId)).thenReturn(token);
+		when(userService.login(username, password)).thenReturn(userLoginDTO);
+		when(jwtUtil.generateToken(username)).thenReturn(token);
 		when(jwtUtil.extractExpiration(token)).thenReturn(new Date());
 
 		// Act
-		ResponseEntity<UserLoginDTO> responseEntity = userController.login(userId, password);
+		ResponseEntity<UserLoginDTO> responseEntity = userController.login(userLoginRequestDTO);
 
 		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(userLoginDTO, responseEntity.getBody());
 
-		verify(userService, times(1)).login(userId, password);
+		verify(userService, times(1)).login(username, password);
 	}
 
 }

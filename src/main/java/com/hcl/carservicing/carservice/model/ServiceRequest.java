@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "servicing_request")
-public class ServicingRequest {
+public class ServiceRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

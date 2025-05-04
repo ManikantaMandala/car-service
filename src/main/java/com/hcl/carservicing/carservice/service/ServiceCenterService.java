@@ -13,5 +13,4 @@ public interface ServiceCenterService {
     List<ServiceCenterDTO> getAvailableServiceCenters(Boolean available);
     ServiceCenterDTO getServiceCenterById(Long id);
     void updateStatusOfServiceCenter(Long id, Boolean status);
-    ServiceCenterDTO findById(Long serviceCenterId);
 }

@@ -2,15 +2,15 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
 
+import com.hcl.carservicing.carservice.dao.service.ServiceTypeDaoService;
+import com.hcl.carservicing.carservice.mapper.ServiceTypeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hcl.carservicing.carservice.exceptionhandler.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
 import com.hcl.carservicing.carservice.model.ServiceType;
-import com.hcl.carservicing.carservice.repository.ServiceTypeRepository;
 import com.hcl.carservicing.carservice.service.ServiceTypeService;
 
 @Service
@@ -18,40 +18,33 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceTypeServiceImpl.class);
 
-    private final ServiceTypeRepository serviceTypeRepository;
+    private final ServiceTypeDaoService serviceTypeDaoService;
 
-    public ServiceTypeServiceImpl(ServiceTypeRepository serviceTypeRepository) {
-        this.serviceTypeRepository = serviceTypeRepository;
+    public ServiceTypeServiceImpl(ServiceTypeDaoService serviceTypeDaoService) {
+        this.serviceTypeDaoService = serviceTypeDaoService;
     }
 
     @Override
     @Transactional
+    // TODO: check whether this is working
     public void createServiceType(ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
-        ServiceType serviceType = new ServiceType();
+        ServiceType serviceType = ServiceTypeMapper.convertToEntity(serviceTypeDTO);
 
-        serviceType.setServiceName(serviceTypeDTO.getServiceName());
-        serviceType.setDescription(serviceTypeDTO.getDescription());
-        ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
+        ServiceType savedServiceType = serviceTypeDaoService.save(serviceType);
         logger.info("Service type created successfully with ID: {}", savedServiceType.getId());
-
     }
 
     @Override
     @Transactional
     public void updateServiceType(Long id, ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Updating service type with ID: {}", id);
-    	ServiceType existing = serviceTypeRepository.findById(id)
-    			.orElseThrow(() -> {
-    				logger.error("Service type not found with ID: {}", id);
-    				return new ElementNotFoundException("ServiceType not found: " + id);
-    			});
+    	ServiceType existing = serviceTypeDaoService.findById(id);
 
         existing.setServiceName(serviceTypeDTO.getServiceName());
         existing.setDescription(serviceTypeDTO.getDescription());
 
-        ServiceType savedServiceType = serviceTypeRepository.save(existing);
-
+        ServiceType savedServiceType = serviceTypeDaoService.save(existing);
         logger.info("Service type updated successfully with ID: {}", savedServiceType.getId());
     }
 
@@ -59,47 +52,29 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
     @Transactional(readOnly = true)
     public ServiceTypeDTO getServiceTypeById(Long id) {
     	logger.info("Fetching service type with ID: {}", id);
-    	return serviceTypeRepository.findById(id)
-    			.map(serviceType -> {
-    				logger.info("Service type found with ID: {}", id);
-    				return convertServiceTypeToDTO(serviceType);
-    		}).orElseThrow(() -> {
-    			logger.error("Service type not found with ID: {}", id);
-    			return new ElementNotFoundException("ServiceType not found: " + id);
-    		});
+        ServiceType serviceType = serviceTypeDaoService.findById(id);
+
+        return ServiceTypeMapper.convertToDTO(serviceType);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ServiceTypeDTO> getAllServiceTypes() {
     	logger.info("Fetching all service types");
-    	List<ServiceType> serviceTypes = serviceTypeRepository.findAll();
+    	List<ServiceType> serviceTypes = serviceTypeDaoService.findAll();
 
     	logger.info("Fetched {} service types", serviceTypes.size());
-    	return serviceTypes.stream().map(this::convertServiceTypeToDTO).toList();
+    	return serviceTypes.stream().map(ServiceTypeMapper::convertToDTO).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public ServiceTypeDTO findById(Long id) {
     	logger.info("Finding service type with ID: {}", id);
-    	ServiceType serviceType = serviceTypeRepository.findById(id)
-    			.orElseThrow(() -> {
-    				logger.error("Service type not found with ID: {}", id);
-    				return new ElementNotFoundException("ServiceType not found: " + id);
-    			});
+    	ServiceType serviceType = serviceTypeDaoService.findById(id);
 
     	logger.info("Service type found with ID: {}", id);
-    	return convertServiceTypeToDTO(serviceType);
+    	return ServiceTypeMapper.convertToDTO(serviceType);
     }
 
-    // TODO: use loggers
-    private ServiceTypeDTO convertServiceTypeToDTO(ServiceType serviceType) {
-        ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
-
-        serviceTypeDTO.setId(serviceType.getId());
-        serviceTypeDTO.setServiceName(serviceType.getServiceName());
-
-        return serviceTypeDTO;
-    }
 }

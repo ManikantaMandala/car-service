@@ -26,7 +26,6 @@ public class AppUserDTO {
     private Integer age;
 
     @NotNull(message = "Gender is mandatory")
-//    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be either Male, Female, or Other")
     private Gender gender;
 
     @NotBlank(message = "Contact Number is mandatory")
@@ -46,7 +45,6 @@ public class AppUserDTO {
     private UserRole role;
     
     private Boolean available = true;
-
 
 	public Boolean getAvailable() {
 		return available;
