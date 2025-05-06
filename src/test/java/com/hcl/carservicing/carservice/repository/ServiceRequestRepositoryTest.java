@@ -38,7 +38,6 @@ class ServiceRequestRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Setup AppUser
         appUser = new AppUser();
 
         appUser.setFirstName("John");
@@ -53,7 +52,6 @@ class ServiceRequestRepositoryTest {
 
         appUser = appUserRepository.save(appUser);
 
-        // Setup ServiceCenter
         ServiceCenter serviceCenter = new ServiceCenter();
 
         serviceCenter.setName("Test Service Center");
@@ -63,7 +61,6 @@ class ServiceRequestRepositoryTest {
 
         serviceCenter = serviceCenterRepository.save(serviceCenter);
 
-        // Setup ServiceType
         String serviceTypeName = "Test Service Type";
         String serviceTypeDescription = "test service type description";
 
@@ -74,7 +71,6 @@ class ServiceRequestRepositoryTest {
 
         ServiceType savedServiceType = serviceTypeRepository.save(serviceType);
 
-        // Setup ServiceCenterServiceType
         serviceCenterServiceType = new ServiceCenterServiceType();
 
         serviceCenterServiceType.setServiceCenter(serviceCenter);
@@ -83,7 +79,6 @@ class ServiceRequestRepositoryTest {
 
         serviceCenterServiceType = serviceCenterServiceTypeRepository.save(serviceCenterServiceType);
 
-        // Setup ServicingRequest
         ServiceRequest serviceRequest = new ServiceRequest();
 
         serviceRequest.setUser(appUser);
@@ -93,7 +88,7 @@ class ServiceRequestRepositoryTest {
         serviceRequest.setService(serviceCenterServiceType);
         serviceRequest.setServiceCenter(serviceCenter);
 
-        serviceRequest = serviceRequestRepository.save(serviceRequest);
+        serviceRequestRepository.save(serviceRequest);
     }
 
     @Test

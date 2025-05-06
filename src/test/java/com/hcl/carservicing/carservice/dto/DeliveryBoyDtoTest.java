@@ -53,7 +53,7 @@ class DeliveryBoyDtoTest {
         Long serviceCenterId = 1L;
         List<Long> serviceRequestsId = Arrays.asList(1L, 2L, 3L);
 
-        DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO(name, contactNumber, serviceCenterId, serviceRequestsId);
+        deliveryBoyDTO = new DeliveryBoyDTO(name, contactNumber, serviceCenterId, serviceRequestsId);
 
         assertEquals(name, deliveryBoyDTO.getName());
         assertEquals(contactNumber, deliveryBoyDTO.getContactNumber());
@@ -63,7 +63,7 @@ class DeliveryBoyDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
+        deliveryBoyDTO = new DeliveryBoyDTO();
         assertNull(deliveryBoyDTO.getName());
         assertNull(deliveryBoyDTO.getContactNumber());
         assertNull(deliveryBoyDTO.getServiceCenterId());

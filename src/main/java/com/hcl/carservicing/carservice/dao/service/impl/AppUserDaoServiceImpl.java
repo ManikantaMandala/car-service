@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class AppUserDaoServiceImpl implements AppUserDaoService {
-    private final static Logger logger = LoggerFactory.getLogger(AppUserDaoServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppUserDaoServiceImpl.class);
 
     private final AppUserRepository appUserRepository;
 

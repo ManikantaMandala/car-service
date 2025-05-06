@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class ServiceCenterServiceTypeDaoServiceImpl implements ServiceCenterServiceTypeDaoService {
-
     private final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceTypeDaoServiceImpl.class);
 
     private final ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository;

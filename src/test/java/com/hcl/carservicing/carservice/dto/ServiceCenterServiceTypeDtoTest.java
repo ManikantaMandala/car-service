@@ -50,7 +50,7 @@ class ServiceCenterServiceTypeDtoTest {
         Long serviceTypeId = 1L;
         Double cost = 100.0;
 
-        ServiceCenterServiceTypeDTO serviceCenterServiceTypeDTO = new ServiceCenterServiceTypeDTO();
+        serviceCenterServiceTypeDTO = new ServiceCenterServiceTypeDTO();
         serviceCenterServiceTypeDTO.setId(id);
         serviceCenterServiceTypeDTO.setServiceCenterId(serviceCenterId);
         serviceCenterServiceTypeDTO.setServiceTypeId(serviceTypeId);
@@ -64,7 +64,7 @@ class ServiceCenterServiceTypeDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        ServiceCenterServiceTypeDTO serviceCenterServiceTypeDTO = new ServiceCenterServiceTypeDTO();
+        serviceCenterServiceTypeDTO = new ServiceCenterServiceTypeDTO();
         assertNull(serviceCenterServiceTypeDTO.getId());
         assertNull(serviceCenterServiceTypeDTO.getServiceCenterId());
         assertNull(serviceCenterServiceTypeDTO.getServiceTypeId());

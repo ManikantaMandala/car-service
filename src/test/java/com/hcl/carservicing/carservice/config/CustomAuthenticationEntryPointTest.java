@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 class CustomAuthenticationEntryPointTest {
 
     @Test
-    void testCommence() throws IOException, ServletException, ServletException, IOException {
+    void testCommence() throws ServletException, IOException {
         CustomAuthenticationEntryPoint entryPoint = new CustomAuthenticationEntryPoint();
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);

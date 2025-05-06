@@ -36,19 +36,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         myLogger.info("Authorization Header: {}", authorizationHeader);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
+            String token = authorizationHeader.substring(7);
             String username = jwtUtil.extractUsername(token);
             myLogger.info("Extracted Username: {}", username);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                if (jwtUtil.validateToken(token, username)) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-                                    userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    myLogger.info("Authentication set for: {}", username);
-                }
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null && jwtUtil.validateToken(token, username)) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+                                userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                myLogger.info("Authentication set for: {}", username);
             }
         }
 

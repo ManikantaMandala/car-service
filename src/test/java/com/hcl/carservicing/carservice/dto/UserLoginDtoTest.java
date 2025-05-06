@@ -36,7 +36,7 @@ class UserLoginDtoTest {
         String jwt = "sampleJwtToken";
         Date expirationTime = new Date();
 
-        UserLoginDTO userLoginDTO = new UserLoginDTO(jwt, expirationTime);
+        userLoginDTO = new UserLoginDTO(jwt, expirationTime);
 
         assertEquals(jwt, userLoginDTO.getJwt());
         assertEquals(expirationTime, userLoginDTO.getExpirationTime());
@@ -44,7 +44,7 @@ class UserLoginDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO = new UserLoginDTO();
         assertNull(userLoginDTO.getJwt());
         assertNull(userLoginDTO.getExpirationTime());
     }

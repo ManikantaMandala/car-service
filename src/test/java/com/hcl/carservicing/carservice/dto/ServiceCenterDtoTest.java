@@ -91,7 +91,8 @@ class ServiceCenterDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
+        serviceCenterDTO = new ServiceCenterDTO();
+
         assertNull(serviceCenterDTO.getId());
         assertNull(serviceCenterDTO.getName());
         assertNull(serviceCenterDTO.getAddress());

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,7 +55,6 @@ class UserServiceImplTest {
 
     private AppUserDTO appUserDTO;
     private AppUser appUser;
-    private UserLoginDTO userLoginDTO;
 
     @BeforeEach
     void setUp() {
@@ -81,8 +79,6 @@ class UserServiceImplTest {
         appUser.setUsername("testuser");
         appUser.setPassword("password");
         appUser.setRole(UserRole.USER);
-
-        userLoginDTO = new UserLoginDTO("jwtToken", new Date());
     }
 
     @Test
@@ -114,7 +110,7 @@ class UserServiceImplTest {
 
     @Test
     void testLogin() {
-        AppUserDTO appUserDTO = new AppUserDTO();
+        appUserDTO = new AppUserDTO();
         appUserDTO.setUsername("testuser");
         appUserDTO.setPassword("password");
 
@@ -143,7 +139,7 @@ class UserServiceImplTest {
 
     @Test
     void testLogin_AuthenticationFailure() {
-        AppUserDTO appUserDTO = new AppUserDTO();
+        appUserDTO = new AppUserDTO();
         appUserDTO.setUsername("testuser");
         appUserDTO.setPassword("wrongpassword");
 
@@ -157,7 +153,7 @@ class UserServiceImplTest {
 
     @Test
     void testLogin_throwIllegalArgumentException() {
-        AppUserDTO appUserDTO = new AppUserDTO();
+        appUserDTO = new AppUserDTO();
         appUserDTO.setUsername("testuser");
         appUserDTO.setPassword("wrongpassword");
 

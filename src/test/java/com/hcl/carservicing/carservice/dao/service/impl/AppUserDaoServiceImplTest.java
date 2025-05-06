@@ -4,14 +4,11 @@ import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
 import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.model.AppUser;
 import com.hcl.carservicing.carservice.repository.AppUserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -20,7 +17,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class AppUserDaoServiceImplTest {
+class AppUserDaoServiceImplTest {
 
     @Mock
     private AppUserRepository appUserRepository;
@@ -29,7 +26,7 @@ public class AppUserDaoServiceImplTest {
     private AppUserDaoServiceImpl appUserDaoService;
 
     @Test
-    public void findByUsername_userFound_returnsAppUser() {
+    void findByUsername_userFound_returnsAppUser() {
         String username = "testuser";
         AppUser expectedUser = new AppUser();
         expectedUser.setUsername(username);
@@ -44,7 +41,7 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void findByUsername_userNotFound_throwsElementNotFoundException() {
+    void findByUsername_userNotFound_throwsElementNotFoundException() {
         String username = "nonexistentuser";
         Optional<AppUser> userOptional = Optional.empty();
 
@@ -58,7 +55,7 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfUsernameExists_usernameExists_throwsElementAlreadyExistException() {
+    void throwIfUsernameExists_usernameExists_throwsElementAlreadyExistException() {
         String username = "existinguser";
         AppUser existingUser = new AppUser();
         existingUser.setUsername(username);
@@ -74,7 +71,7 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfUsernameExists_usernameDoesNotExist_doesNotThrowException() {
+    void throwIfUsernameExists_usernameDoesNotExist_doesNotThrowException() {
         String username = "newuser";
         Optional<AppUser> userOptional = Optional.empty();
 
@@ -86,7 +83,7 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfContactExists_contactExists_throwsElementAlreadyExistException() {
+    void throwIfContactExists_contactExists_throwsElementAlreadyExistException() {
         String contactNumber = "1234567890";
         AppUser existingUser = new AppUser();
         existingUser.setContactNumber(contactNumber);
@@ -102,7 +99,7 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfContactExists_contactDoesNotExist_doesNotThrowException() {
+    void throwIfContactExists_contactDoesNotExist_doesNotThrowException() {
         String contactNumber = "9876543210";
         Optional<AppUser> userOptional = Optional.empty();
 
@@ -114,11 +111,11 @@ public class AppUserDaoServiceImplTest {
     }
 
     @Test
-    public void save_validUser_returnsSavedUser() {
-        // Arrange
+    void save_validUser_returnsSavedUser() {
         AppUser userToSave = new AppUser();
         userToSave.setUsername("testuser");
         userToSave.setContactNumber("1234567890");
+
         AppUser savedUser = new AppUser();
         savedUser.setId(1L);
         savedUser.setUsername("testuser");

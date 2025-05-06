@@ -2,22 +2,22 @@ package com.hcl.carservicing.carservice.controller;
 
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.service.ServiceCenterService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ServiceCenterControllerTest {
 
 	@Mock
@@ -26,22 +26,14 @@ class ServiceCenterControllerTest {
 	@InjectMocks
 	private ServiceCenterController serviceCenterController;
 
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-	}
-
 	@Test
 	void testAddServiceCenter_Success() {
-		// Arrange
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("Test Center");
 		serviceCenterDTO.setAddress("test_address");
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.addServiceCenter(serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		assertEquals("Service center created successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).createServiceCenter(serviceCenterDTO);
@@ -49,14 +41,11 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testAddServiceCenter_InvalidInput() {
-		// Arrange
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
-		serviceCenterDTO.setName(null); // Invalid input
+		serviceCenterDTO.setName(null);
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.addServiceCenter(serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		assertEquals("Service center created successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).createServiceCenter(serviceCenterDTO);
@@ -64,15 +53,12 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testAddServiceCenter_EmptyName() {
-		// Arrange
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("");
 		serviceCenterDTO.setAddress("test_address");
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.addServiceCenter(serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 		assertEquals("Service center created successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).createServiceCenter(serviceCenterDTO);
@@ -80,16 +66,13 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testUpdateServiceCenter_Success() {
-		// Arrange
 		Long id = 1L;
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("Updated Center");
 		serviceCenterDTO.setAddress("test_address");
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateServiceCenter(id, serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Service center updated successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).updateServiceCenter(id, serviceCenterDTO);
@@ -97,15 +80,12 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testUpdateServiceCenter_InvalidInput() {
-		// Arrange
 		Long id = 1L;
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
-		serviceCenterDTO.setName(null); // Invalid
+		serviceCenterDTO.setName(null);
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateServiceCenter(id, serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Service center updated successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).updateServiceCenter(id, serviceCenterDTO);
@@ -113,16 +93,13 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testUpdateServiceCenter_EmptyName() {
-		// Arrange
 		Long id = 1L;
 		ServiceCenterDTO serviceCenterDTO = new ServiceCenterDTO();
 		serviceCenterDTO.setName("");
 		serviceCenterDTO.setAddress("test_address");
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateServiceCenter(id, serviceCenterDTO);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Service center updated successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).updateServiceCenter(id, serviceCenterDTO);
@@ -130,7 +107,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetAllServiceCenters_MultipleCenters() {
-		// Arrange
 		List<ServiceCenterDTO> centers = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
 
@@ -150,10 +126,8 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getAllServiceCenters()).thenReturn(centers);
 
-		// Act
 		ResponseEntity<List<ServiceCenterDTO>> responseEntity = serviceCenterController.getAllServiceCenters();
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(centers, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getAllServiceCenters();
@@ -161,14 +135,11 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetAllServiceCenters_NoCenters() {
-		// Arrange
 		List<ServiceCenterDTO> centers = new ArrayList<>();
 		when(serviceCenterService.getAllServiceCenters()).thenReturn(centers);
 
-		// Act
 		ResponseEntity<List<ServiceCenterDTO>> responseEntity = serviceCenterController.getAllServiceCenters();
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(centers, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getAllServiceCenters();
@@ -176,7 +147,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetAllServiceCenters_SingleCenter() {
-		// Arrange
 		List<ServiceCenterDTO> centers = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
 
@@ -188,10 +158,8 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getAllServiceCenters()).thenReturn(centers);
 
-		// Act
 		ResponseEntity<List<ServiceCenterDTO>> responseEntity = serviceCenterController.getAllServiceCenters();
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(centers, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getAllServiceCenters();
@@ -199,7 +167,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetAvailableServiceCenters_AvailableCenters() {
-		// Arrange
 		List<ServiceCenterDTO> availableCenters = new ArrayList<>();
 		ServiceCenterDTO center1 = new ServiceCenterDTO();
 
@@ -211,11 +178,9 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getAvailableServiceCenters(true)).thenReturn(availableCenters);
 
-		// Act
 		ResponseEntity<List<ServiceCenterDTO>> responseEntity = serviceCenterController
 				.getAvailableServiceCenters(true);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(availableCenters, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getAvailableServiceCenters(true);
@@ -223,7 +188,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetAvailableServiceCenters_UnavailableCenters() {
-		// Arrange
 		List<ServiceCenterDTO> unavailableCenters = new ArrayList<>();
 		ServiceCenterDTO center2 = new ServiceCenterDTO();
 		center2.setId(2L);
@@ -233,11 +197,9 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getAvailableServiceCenters(false)).thenReturn(unavailableCenters);
 
-		// Act
 		ResponseEntity<List<ServiceCenterDTO>> responseEntity = serviceCenterController
 				.getAvailableServiceCenters(false);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(unavailableCenters, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getAvailableServiceCenters(false);
@@ -245,7 +207,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetServiceCenterById_ExistingCenter() {
-		// Arrange
 		Long id = 1L;
 		ServiceCenterDTO center = new ServiceCenterDTO();
 		center.setId(id);
@@ -254,10 +215,8 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getServiceCenterById(id)).thenReturn(center);
 
-		// Act
 		ResponseEntity<ServiceCenterDTO> responseEntity = serviceCenterController.getServiceCenterById(id);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(center, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getServiceCenterById(id);
@@ -265,14 +224,11 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetServiceCenterById_NonExistingCenter() {
-		// Arrange
 		Long id = 100L;
 		when(serviceCenterService.getServiceCenterById(id)).thenReturn(null);
 
-		// Act
 		ResponseEntity<ServiceCenterDTO> responseEntity = serviceCenterController.getServiceCenterById(id);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertNull(responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getServiceCenterById(id);
@@ -280,7 +236,6 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testGetServiceCenterById_AnotherCenter() {
-		// Arrange
 		Long id = 2L;
 		ServiceCenterDTO center = new ServiceCenterDTO();
 		center.setId(id);
@@ -289,10 +244,8 @@ class ServiceCenterControllerTest {
 
 		when(serviceCenterService.getServiceCenterById(id)).thenReturn(center);
 
-		// Act
 		ResponseEntity<ServiceCenterDTO> responseEntity = serviceCenterController.getServiceCenterById(id);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals(center, responseEntity.getBody());
 		verify(serviceCenterService, times(1)).getServiceCenterById(id);
@@ -300,14 +253,11 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testUpdateStatusOfServiceCenter_Success() {
-		// Arrange
 		Long id = 1L;
 		Boolean status = true;
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateStatusOfServiceCenter(id, status);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Service center status updated successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).updateStatusOfServiceCenter(id, status);
@@ -315,14 +265,11 @@ class ServiceCenterControllerTest {
 
 	@Test
 	void testUpdateStatusOfServiceCenter_Failure() {
-		// Arrange
 		Long id = 1L;
 		Boolean status = false;
 
-		// Act
 		ResponseEntity<String> responseEntity = serviceCenterController.updateStatusOfServiceCenter(id, status);
 
-		// Assert
 		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 		assertEquals("Service center status updated successfully", responseEntity.getBody());
 		verify(serviceCenterService, times(1)).updateStatusOfServiceCenter(id, status);

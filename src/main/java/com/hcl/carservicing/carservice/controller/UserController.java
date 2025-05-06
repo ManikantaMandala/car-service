@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hcl.carservicing.carservice.dto.AppUserDTO;
@@ -38,7 +37,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
-    // TODO: change the request param of both userId and password
     @PostMapping("/login")
     public ResponseEntity<UserLoginDTO> login(@RequestBody UserLoginRequestDTO userLoginRequestDTO) {
         logger.info("Logging in user with details: {}", userLoginRequestDTO);

@@ -48,7 +48,7 @@ public class ServiceCenter {
     		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<DeliveryBoy> deliveryBoys;
 	
-	private Boolean available = true; // Default value set here
+	private Boolean available = true;
 
 	public Long getId() {
 		return id;

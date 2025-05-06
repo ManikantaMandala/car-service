@@ -1,12 +1,9 @@
 package com.hcl.carservicing.carservice.dao.service.impl;
 
 import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
-import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
-import com.hcl.carservicing.carservice.mapper.ServiceCenterMapper;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
 import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
-import com.hcl.carservicing.carservice.service.impl.ServiceCenterServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class ServiceCenterDaoServiceImpl implements ServiceCenterDaoService {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceCenterDaoServiceImpl.class);
     private ServiceCenterRepository serviceCenterRepository;
 
     @Override

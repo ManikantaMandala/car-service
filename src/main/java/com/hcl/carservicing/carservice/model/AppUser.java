@@ -53,7 +53,7 @@ public class AppUser {
 
     @NotNull(message = "Role is mandatory")
     @Enumerated(EnumType.STRING)
-    private UserRole role; // ADMIN, USER, DELIVERY_BOY
+    private UserRole role;
     
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -142,6 +142,13 @@ public class AppUser {
 		this.createdAt = createdAt;
 	}
 
+	public List<ServiceRequest> getServiceRequests() {
+		return serviceRequests;
+	}
+
+	public void setServiceRequests(List<ServiceRequest> serviceRequests) {
+		this.serviceRequests = serviceRequests;
+	}
 
 	@Override
 	public String toString() {

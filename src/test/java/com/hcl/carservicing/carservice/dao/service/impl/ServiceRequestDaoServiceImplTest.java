@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceRequestDaoServiceImplTest {
+class ServiceRequestDaoServiceImplTest {
 
     @Mock
     private ServiceRequestRepository serviceRequestRepository;
@@ -34,7 +34,7 @@ public class ServiceRequestDaoServiceImplTest {
     private ServiceRequestDaoServiceImpl serviceRequestDaoService;
 
     @Test
-    public void save_validServiceRequest_returnsSavedServiceRequest() {
+    void save_validServiceRequest_returnsSavedServiceRequest() {
         ServiceRequest requestToSave = new ServiceRequest();
         requestToSave.setStartDate(LocalDate.now());
         requestToSave.setEndDate(LocalDate.now().plusDays(1));
@@ -66,7 +66,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findByUserUsername_userHasRequests_returnsListOfServiceRequests() {
+    void findByUserUsername_userHasRequests_returnsListOfServiceRequests() {
         String username = "testuser";
         List<ServiceRequest> expectedRequests = new ArrayList<>();
         ServiceRequest request1 = new ServiceRequest();
@@ -106,7 +106,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findByUserUsername_userHasNoRequests_returnsEmptyList() {
+    void findByUserUsername_userHasNoRequests_returnsEmptyList() {
         String username = "anotheruser";
         List<ServiceRequest> expectedRequests = new ArrayList<>();
 
@@ -119,7 +119,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findById_serviceRequestFound_returnsServiceRequest() {
+    void findById_serviceRequestFound_returnsServiceRequest() {
         Long requestId = 1L;
         ServiceRequest expectedRequest = new ServiceRequest();
         expectedRequest.setId(requestId);
@@ -145,7 +145,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findById_serviceRequestNotFound_throwsElementNotFoundException() {
+    void findById_serviceRequestNotFound_throwsElementNotFoundException() {
         Long requestId = 2L;
         Optional<ServiceRequest> optional = Optional.empty();
 
@@ -159,7 +159,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findAll_serviceRequestsFound_returnsListOfServiceRequests() {
+    void findAll_serviceRequestsFound_returnsListOfServiceRequests() {
         List<ServiceRequest> expectedRequests = new ArrayList<>();
         ServiceRequest request1 = new ServiceRequest();
         request1.setId(1L);
@@ -200,7 +200,7 @@ public class ServiceRequestDaoServiceImplTest {
     }
 
     @Test
-    public void findAll_noServiceRequestsFound_returnsEmptyList() {
+    void findAll_noServiceRequestsFound_returnsEmptyList() {
         List<ServiceRequest> expectedRequests = new ArrayList<>();
 
         when(serviceRequestRepository.findAll()).thenReturn(expectedRequests);

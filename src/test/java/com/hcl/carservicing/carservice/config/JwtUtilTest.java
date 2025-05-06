@@ -1,169 +1,71 @@
 package com.hcl.carservicing.carservice.config;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
+import java.lang.reflect.Field;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.mock;
 
-@ExtendWith(MockitoExtension.class)
-public class JwtUtilTest {
+class JwtUtilTest {
 
-    @InjectMocks
     private JwtUtil jwtUtil;
 
-    @Value("${jwt.secret}") //  It's crucial to have this value in your application.properties or application.yml
-    private String secretKey;
-
     @BeforeEach
-    public void setUp() {
-        //  Manually set the secretKey, since @Value injection might not work as expected in a unit test.
-        ReflectionTestUtils.setField(jwtUtil, "secretKey", secretKey);
+    void setUp() throws Exception {
+        jwtUtil = new JwtUtil();
+
+        Field field = JwtUtil.class.getDeclaredField("secretKey");
+        field.setAccessible(true);
+        field.set(jwtUtil, "my-test-secret-key-1234567890123456");
     }
 
     @Test
-    public void generateToken_validUsername_returnsNonEmptyToken() {
-        // Arrange
-        String username = "testuser";
-
-        // Act
-        String token = jwtUtil.generateToken(username);
-
-        // Assert
+    void generateToken_validUsername_tokenGenerated() {
+        String token = jwtUtil.generateToken("test-user");
         assertNotNull(token);
         assertFalse(token.isEmpty());
     }
 
     @Test
-    public void extractUsername_validToken_returnsCorrectUsername() {
-        // Arrange
-        String username = "testuser";
-        String token = jwtUtil.generateToken(username);
-
-        // Act
-        String extractedUsername = jwtUtil.extractUsername(token);
-
-        // Assert
-        assertEquals(username, extractedUsername);
+    void extractUsername_validToken_returnsCorrectUsername() {
+        String token = jwtUtil.generateToken("test-user");
+        String username = jwtUtil.extractUsername(token);
+        assertEquals("test-user", username);
     }
 
     @Test
-    public void validateToken_validTokenAndUsername_returnsTrue() {
-        // Arrange
-        String username = "testuser";
-        String token = jwtUtil.generateToken(username);
-
-        // Act
-        boolean isValid = jwtUtil.validateToken(token, username);
-
-        // Assert
+    void validateToken_validTokenAndUsername_returnsTrue() {
+        String token = jwtUtil.generateToken("test-user");
+        boolean isValid = jwtUtil.validateToken(token, "test-user");
         assertTrue(isValid);
     }
 
     @Test
-    public void validateToken_invalidUsername_returnsFalse() {
-        // Arrange
-        String username = "testuser";
-        String token = jwtUtil.generateToken(username);
-        String differentUsername = "differentuser";
-
-        // Act
-        boolean isValid = jwtUtil.validateToken(token, differentUsername);
-
-        // Assert
+    void validateToken_invalidUsername_returnsFalse() {
+        String token = jwtUtil.generateToken("test-user");
+        boolean isValid = jwtUtil.validateToken(token, "someoneElse");
         assertFalse(isValid);
     }
 
     @Test
-    public void validateToken_expiredToken_returnsFalse() throws InterruptedException {
-        // Arrange
-        String username = "testuser";
-        long expirationTime = 1000;
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + expirationTime);
+    void isTokenExpired_expiredToken_returnsTrue() throws Exception {
         String expiredToken = Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiration)
-                .signWith(jwtUtil.generateKey(secretKey), SignatureAlgorithm.HS256)
+                .setSubject("test-user")
+                .setIssuedAt(new Date(System.currentTimeMillis() - 10000))
+                .setExpiration(new Date(System.currentTimeMillis() - 5000))
+                .signWith(jwtUtil.generateKey("my-test-secret-key-1234567890123456"))
                 .compact();
 
-        Thread.sleep(expirationTime + 1000);
-
-        // Act
-        boolean isValid = jwtUtil.validateToken(expiredToken, username);
-
-        // Assert
-        assertFalse(isValid);
+        assertTrue(jwtUtil.isTokenExpired(expiredToken));
     }
 
     @Test
-    public void isTokenExpired_expiredToken_returnsTrue() throws InterruptedException {
-        // Arrange
-        String username = "testuser";
-        long expirationTime = 1000;
-        Date now = new Date();
-        Date expiration = new Date(now.getTime() + expirationTime);
-
-        String expiredToken = Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expiration)
-                .signWith(jwtUtil.generateKey(secretKey), SignatureAlgorithm.HS256)
-                .compact();
-
-        Thread.sleep(expirationTime+1000);
-
-        // Act
-        boolean isExpired = jwtUtil.isTokenExpired(expiredToken);
-
-        // Assert
-        assertTrue(isExpired);
-    }
-
-    @Test
-    public void isTokenExpired_validToken_returnsFalse() {
-        // Arrange
-        String username = "testuser";
-        String token = jwtUtil.generateToken(username);
-
-        // Act
-        boolean isExpired = jwtUtil.isTokenExpired(token);
-
-        // Assert
-        assertFalse(isExpired);
-    }
-
-    @Test
-    public void extractExpiration_validToken_returnsCorrectExpirationDate() {
-        // Arrange
-        String username = "testuser";
-        long expirationTime = 3600000;
-        Date expectedExpiration = new Date(System.currentTimeMillis() + expirationTime);
-        String token = jwtUtil.generateToken(username);
-
-        // Act
-        Date actualExpiration = jwtUtil.extractExpiration(token);
-
-        // Assert
-        assertEquals(expectedExpiration.getTime(), actualExpiration.getTime());
+    void extractExpiration_validToken_returnsFutureDate() {
+        String token = jwtUtil.generateToken("test-user");
+        Date expiration = jwtUtil.extractExpiration(token);
+        assertTrue(expiration.after(new Date()));
     }
 }

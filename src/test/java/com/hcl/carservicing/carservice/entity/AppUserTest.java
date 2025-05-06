@@ -1,6 +1,5 @@
 package com.hcl.carservicing.carservice.entity;
 
-import com.hcl.carservicing.carservice.enums.Gender;
 import com.hcl.carservicing.carservice.model.AppUser;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -74,13 +73,6 @@ class AppUserTest {
         assertFalse(violations.isEmpty());
     }
 
-//    @Test
-//    void testGenderPattern() {
-//        appUser.setGender(Gender.valueOf("Unknown"));
-//        Set<ConstraintViolation<AppUser>> violations = validator.validate(appUser);
-//        assertFalse(violations.isEmpty());
-//    }
-    
     @Test
     void testContactNumberPattern() {
         appUser.setContactNumber("12345");

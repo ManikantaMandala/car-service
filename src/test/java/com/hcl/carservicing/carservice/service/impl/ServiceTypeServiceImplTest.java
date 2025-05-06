@@ -1,21 +1,17 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import com.hcl.carservicing.carservice.dao.service.ServiceTypeDaoService;
-import com.hcl.carservicing.carservice.dao.service.impl.ServiceTypeDaoServiceImpl;
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
 import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.model.ServiceType;
-import com.hcl.carservicing.carservice.repository.ServiceTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

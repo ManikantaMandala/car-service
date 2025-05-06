@@ -26,7 +26,6 @@ public class ServiceTypeServiceImpl implements ServiceTypeService {
 
     @Override
     @Transactional
-    // TODO: check whether this is working
     public void createServiceType(ServiceTypeDTO serviceTypeDTO) {
     	logger.info("Creating service type with name: {}", serviceTypeDTO.getServiceName());
         ServiceType serviceType = ServiceTypeMapper.convertToEntity(serviceTypeDTO);

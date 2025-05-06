@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class ServiceTypeDaoServiceImpl implements ServiceTypeDaoService {
-    private final static Logger logger = LoggerFactory.getLogger(ServiceTypeDaoServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceTypeDaoServiceImpl.class);
 
     private final ServiceTypeRepository serviceTypeRepository;
 

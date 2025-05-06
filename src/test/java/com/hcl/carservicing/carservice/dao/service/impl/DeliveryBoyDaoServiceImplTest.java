@@ -7,16 +7,10 @@ import com.hcl.carservicing.carservice.model.ServiceCenter;
 import com.hcl.carservicing.carservice.repository.DeliveryBoyRepository;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class DeliveryBoyDaoServiceImplTest {
+class DeliveryBoyDaoServiceImplTest {
 
     @Mock
     private DeliveryBoyRepository deliveryBoyRepository;
@@ -37,7 +31,7 @@ public class DeliveryBoyDaoServiceImplTest {
     private DeliveryBoyDaoServiceImpl deliveryBoyDaoService;
 
     @Test
-    public void findById_deliveryBoyFound_returnsDeliveryBoy() {
+    void findById_deliveryBoyFound_returnsDeliveryBoy() {
         Long deliveryBoyId = 1L;
         DeliveryBoy expectedDeliveryBoy = new DeliveryBoy();
         expectedDeliveryBoy.setId(deliveryBoyId);
@@ -52,7 +46,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void findById_deliveryBoyNotFound_throwsElementNotFoundException() {
+    void findById_deliveryBoyNotFound_throwsElementNotFoundException() {
         Long deliveryBoyId = 2L;
         Optional<DeliveryBoy> deliveryBoyOptional = Optional.empty();
 
@@ -66,7 +60,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceCenterId_deliveryBoysFound_returnsListOfDeliveryBoys() {
+    void findByServiceCenterId_deliveryBoysFound_returnsListOfDeliveryBoys() {
         Long serviceCenterId = 101L;
 
         ServiceCenter serviceCenter = new ServiceCenter();
@@ -88,7 +82,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceCenterId_noDeliveryBoysFound_returnsEmptyList() {
+    void findByServiceCenterId_noDeliveryBoysFound_returnsEmptyList() {
         Long serviceCenterId = 102L;
         List<DeliveryBoy> expectedDeliveryBoys = new ArrayList<>();
 
@@ -101,12 +95,11 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void findAvailableDeliveryBoys_deliveryBoysFound_returnsListOfDeliveryBoys() {
+    void findAvailableDeliveryBoys_deliveryBoysFound_returnsListOfDeliveryBoys() {
         List<DeliveryBoy> expectedDeliveryBoys = new ArrayList<>();
         DeliveryBoy boy1 = new DeliveryBoy();
-//        boy1.setNumberOfServiceRequests(2);
         DeliveryBoy boy2 = new DeliveryBoy();
-//        boy2.setNumberOfServiceRequests(0);
+
         expectedDeliveryBoys.add(boy1);
         expectedDeliveryBoys.add(boy2);
 
@@ -119,7 +112,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void findAvailableDeliveryBoys_noDeliveryBoysFound_returnsEmptyList() {
+    void findAvailableDeliveryBoys_noDeliveryBoysFound_returnsEmptyList() {
         List<DeliveryBoy> expectedDeliveryBoys = new ArrayList<>();
 
         when(deliveryBoyRepository.findWithLessThanFourServiceRequests()).thenReturn(expectedDeliveryBoys);
@@ -131,7 +124,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfContactExists_contactExists_throwsElementAlreadyExistException() {
+    void throwIfContactExists_contactExists_throwsElementAlreadyExistException() {
         String contactNumber = "1122334455";
         DeliveryBoy existingDeliveryBoy = new DeliveryBoy();
         existingDeliveryBoy.setContactNumber(contactNumber);
@@ -147,7 +140,7 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void throwIfContactExists_contactDoesNotExist_doesNotThrowException() {
+    void throwIfContactExists_contactDoesNotExist_doesNotThrowException() {
         String contactNumber = "9988776655";
         Optional<DeliveryBoy> deliveryBoyOptional = Optional.empty();
 
@@ -159,10 +152,11 @@ public class DeliveryBoyDaoServiceImplTest {
     }
 
     @Test
-    public void save_validDeliveryBoy_returnsSavedDeliveryBoy() {
+    void save_validDeliveryBoy_returnsSavedDeliveryBoy() {
         DeliveryBoy deliveryBoyToSave = new DeliveryBoy();
         deliveryBoyToSave.setName("John Doe");
         deliveryBoyToSave.setContactNumber("1234567890");
+
         DeliveryBoy savedDeliveryBoy = new DeliveryBoy();
         savedDeliveryBoy.setId(1L);
         savedDeliveryBoy.setName("John Doe");

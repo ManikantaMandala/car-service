@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceCenterServiceTypeDaoServiceImplTest {
+class ServiceCenterServiceTypeDaoServiceImplTest {
 
     @Mock
     private ServiceCenterServiceTypeRepository serviceCenterServiceTypeRepository;
@@ -31,7 +31,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     private ServiceCenterServiceTypeDaoServiceImpl serviceCenterServiceTypeDaoService;
 
     @Test
-    public void findById_serviceCenterServiceTypeFound_returnsServiceCenterServiceType() {
+    void findById_serviceCenterServiceTypeFound_returnsServiceCenterServiceType() {
         Long id = 1L;
         ServiceCenterServiceType expectedServiceCenterServiceType = new ServiceCenterServiceType();
         expectedServiceCenterServiceType.setId(id);
@@ -46,7 +46,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findById_serviceCenterServiceTypeNotFound_throwsElementNotFoundException() {
+    void findById_serviceCenterServiceTypeNotFound_throwsElementNotFoundException() {
         Long id = 2L;
         Optional<ServiceCenterServiceType> optional = Optional.empty();
 
@@ -60,7 +60,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void save_validServiceCenterServiceType_returnsSavedServiceCenterServiceType() {
+    void save_validServiceCenterServiceType_returnsSavedServiceCenterServiceType() {
         ServiceCenter serviceCenter = new ServiceCenter();
         ServiceType serviceType = new ServiceType();
 
@@ -68,7 +68,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
         toSave.setServiceCenter(serviceCenter);
         toSave.setServiceType(serviceType);
 
-        ServiceCenterServiceType saved = new ServiceCenterServiceType(); // Mock saved object
+        ServiceCenterServiceType saved = new ServiceCenterServiceType();
         saved.setId(1L);
         saved.setServiceCenter(serviceCenter);
         saved.setServiceType(serviceType);
@@ -82,9 +82,8 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceCenterId_serviceCenterIdFound_returnsList() {
+    void findByServiceCenterId_serviceCenterIdFound_returnsList() {
         ServiceCenter serviceCenter = new ServiceCenter();
-        ServiceType serviceType = new ServiceType();
 
         Long serviceCenterId = 1L;
         List<ServiceCenterServiceType> expectedList = new ArrayList<>();
@@ -107,7 +106,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceCenterId_serviceCenterIdNotFound_returnsEmptyList() {
+    void findByServiceCenterId_serviceCenterIdNotFound_returnsEmptyList() {
         Long serviceCenterId = 1L;
         List<ServiceCenterServiceType> expectedList = new ArrayList<>();
 
@@ -120,7 +119,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceTypeId_serviceTypeIdFound_returnsList() {
+    void findByServiceTypeId_serviceTypeIdFound_returnsList() {
         ServiceType serviceType = new ServiceType();
 
         Long serviceTypeId = 2L;
@@ -142,7 +141,7 @@ public class ServiceCenterServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findByServiceTypeId_serviceTypeIdNotFound_returnsEmptyList() {
+    void findByServiceTypeId_serviceTypeIdNotFound_returnsEmptyList() {
         Long serviceTypeId = 2L;
         List<ServiceCenterServiceType> expectedList = new ArrayList<>();
 

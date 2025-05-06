@@ -23,7 +23,7 @@ import com.hcl.carservicing.carservice.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final AppUserDaoService appUserDaoService;
     private final JwtUtil jwtUtil;

@@ -119,8 +119,6 @@ class AdminRequestControllerTest {
 		Long serviceCenterId = 1L;
 		Boolean status = false;
 
-		// when(serviceCenterService.updateStatusOfServiceCenter(serviceCenterId,
-		// status)).thenReturn(void);
 		doNothing().when(serviceCenterService).updateStatusOfServiceCenter(serviceCenterId, status);
 
 		ResponseEntity<String> result = adminRequestController.updateStatusOfServiceCenter(serviceCenterId, status);

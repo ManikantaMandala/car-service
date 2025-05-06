@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
 import com.hcl.carservicing.carservice.enums.RequestStatus;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface ServiceRequestService {
 

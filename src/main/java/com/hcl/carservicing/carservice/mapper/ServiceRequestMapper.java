@@ -20,9 +20,6 @@ public class ServiceRequestMapper {
         if (serviceRequest.getDeliveryBoy() != null) {
             serviceRequestDto.setDeliveryBoyId(serviceRequest.getDeliveryBoy().getId());
         }
-//        else {
-//            serviceRequestDto.setDeliveryBoyId(null); // or handle it as needed
-//        }
 
         return serviceRequestDto;
     }

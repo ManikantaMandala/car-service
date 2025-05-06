@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DeliveryBoyAllocationStrategyImplTest {
+class DeliveryBoyAllocationStrategyImplTest {
 
     @Mock
     private DeliveryBoyDaoService deliveryBoyDaoService;
@@ -25,7 +25,7 @@ public class DeliveryBoyAllocationStrategyImplTest {
     private DeliveryBoyAllocationStrategyImpl allocationStrategy;
 
     @Test
-    public void getAvailableDeliveryBoy_deliveryBoyAvailable_returnsDeliveryBoy() {
+    void getAvailableDeliveryBoy_deliveryBoyAvailable_returnsDeliveryBoy() {
         List<DeliveryBoy> availableDeliveryBoys = new ArrayList<>();
         DeliveryBoy deliveryBoy = new DeliveryBoy();
         deliveryBoy.setId(1L);
@@ -39,7 +39,7 @@ public class DeliveryBoyAllocationStrategyImplTest {
     }
 
     @Test
-    public void getAvailableDeliveryBoy_noDeliveryBoyAvailable_throwsDeliveryBoyNotAvailable() {
+    void getAvailableDeliveryBoy_noDeliveryBoyAvailable_throwsDeliveryBoyNotAvailable() {
         List<DeliveryBoy> availableDeliveryBoys = new ArrayList<>();
 
         when(deliveryBoyDaoService.findAvailableDeliveryBoys()).thenReturn(availableDeliveryBoys);

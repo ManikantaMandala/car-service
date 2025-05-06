@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 public class DeliveryBoyDaoServiceImpl implements DeliveryBoyDaoService {
-    private final static Logger logger = LoggerFactory.getLogger(DeliveryBoyDaoServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryBoyDaoServiceImpl.class);
 
     private final DeliveryBoyRepository deliveryBoyRepository;
 

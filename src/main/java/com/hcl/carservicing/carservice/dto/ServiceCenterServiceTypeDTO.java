@@ -16,7 +16,6 @@ public class ServiceCenterServiceTypeDTO {
     @Min(value = 0, message = "Cost must be greater than or equal to 0")
     private Double cost;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

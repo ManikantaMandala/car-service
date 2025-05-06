@@ -39,7 +39,11 @@ public class JwtUtil {
     }
 
     boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     Key generateKey(String secretKey) {

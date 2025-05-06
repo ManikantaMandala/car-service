@@ -7,14 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceTypeDaoServiceImplTest {
+class ServiceTypeDaoServiceImplTest {
 
     @Mock
     private ServiceTypeRepository serviceTypeRepository;
@@ -35,8 +29,7 @@ public class ServiceTypeDaoServiceImplTest {
     private ServiceTypeDaoServiceImpl serviceTypeDaoService;
 
     @Test
-    public void findById_serviceTypeFound_returnsServiceType() {
-        // Arrange
+    void findById_serviceTypeFound_returnsServiceType() {
         Long id = 1L;
         ServiceType expectedServiceType = new ServiceType();
         expectedServiceType.setId(id);
@@ -44,23 +37,19 @@ public class ServiceTypeDaoServiceImplTest {
 
         when(serviceTypeRepository.findById(id)).thenReturn(serviceTypeOptional);
 
-        // Act
         ServiceType actualServiceType = serviceTypeDaoService.findById(id);
 
-        // Assert
         assertEquals(expectedServiceType, actualServiceType);
         verify(serviceTypeRepository).findById(id);
     }
 
     @Test
-    public void findById_serviceTypeNotFound_throwsElementNotFoundException() {
-        // Arrange
+    void findById_serviceTypeNotFound_throwsElementNotFoundException() {
         Long id = 2L;
         Optional<ServiceType> serviceTypeOptional = Optional.empty();
 
         when(serviceTypeRepository.findById(id)).thenReturn(serviceTypeOptional);
 
-        // Act & Assert
         ElementNotFoundException exception = assertThrows(ElementNotFoundException.class, () -> {  // Changed exception type.
             serviceTypeDaoService.findById(id);
         });
@@ -69,8 +58,7 @@ public class ServiceTypeDaoServiceImplTest {
     }
 
     @Test
-    public void findAll_serviceTypesFound_returnsListOfServiceTypes() {
-        // Arrange
+    void findAll_serviceTypesFound_returnsListOfServiceTypes() {
         List<ServiceType> expectedServiceTypes = new ArrayList<>();
         ServiceType type1 = new ServiceType();
         type1.setId(1L);
@@ -81,32 +69,26 @@ public class ServiceTypeDaoServiceImplTest {
 
         when(serviceTypeRepository.findAll()).thenReturn(expectedServiceTypes);
 
-        // Act
         List<ServiceType> actualServiceTypes = serviceTypeDaoService.findAll();
 
-        // Assert
         assertEquals(expectedServiceTypes, actualServiceTypes);
         verify(serviceTypeRepository).findAll();
     }
 
     @Test
-    public void findAll_noServiceTypesFound_returnsEmptyList() {
-        // Arrange
+    void findAll_noServiceTypesFound_returnsEmptyList() {
         List<ServiceType> expectedServiceTypes = new ArrayList<>();
 
         when(serviceTypeRepository.findAll()).thenReturn(expectedServiceTypes);
 
-        // Act
         List<ServiceType> actualServiceTypes = serviceTypeDaoService.findAll();
 
-        // Assert
         assertEquals(expectedServiceTypes, actualServiceTypes);
         verify(serviceTypeRepository).findAll();
     }
 
     @Test
-    public void save_validServiceType_returnsSavedServiceType() {
-        // Arrange
+    void save_validServiceType_returnsSavedServiceType() {
         ServiceType typeToSave = new ServiceType();
         typeToSave.setServiceName("Test Service Type");
 
@@ -116,10 +98,8 @@ public class ServiceTypeDaoServiceImplTest {
 
         when(serviceTypeRepository.save(typeToSave)).thenReturn(savedType);
 
-        // Act
         ServiceType result = serviceTypeDaoService.save(typeToSave);
 
-        // Assert
         assertEquals(savedType, result);
         verify(serviceTypeRepository).save(typeToSave);
     }

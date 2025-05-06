@@ -4,13 +4,11 @@ import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
-import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;

@@ -2,8 +2,6 @@ package com.hcl.carservicing.carservice.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 
 public interface ServiceCenterService {

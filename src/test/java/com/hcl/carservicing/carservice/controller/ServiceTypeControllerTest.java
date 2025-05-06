@@ -2,11 +2,11 @@ package com.hcl.carservicing.carservice.controller;
 
 import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
 import com.hcl.carservicing.carservice.service.ServiceTypeService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ServiceTypeControllerTest {
 
 	@Mock
@@ -23,11 +24,6 @@ class ServiceTypeControllerTest {
 
 	@InjectMocks
 	private ServiceTypeController serviceTypeController;
-
-	@BeforeEach
-	void setUp() {
-		MockitoAnnotations.openMocks(this);
-	}
 
 	@Test
 	void testCreateServiceType_ValidInput() {

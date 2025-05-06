@@ -1,28 +1,21 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
 import com.hcl.carservicing.carservice.dao.service.ServiceCenterServiceTypeDaoService;
 import com.hcl.carservicing.carservice.dao.service.ServiceTypeDaoService;
 import com.hcl.carservicing.carservice.mapper.ServiceCenterServiceTypeMapper;
-import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
-import com.hcl.carservicing.carservice.repository.ServiceTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
 import com.hcl.carservicing.carservice.dto.ServiceCenterServiceTypeDTO;
-import com.hcl.carservicing.carservice.dto.ServiceTypeDTO;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
 import com.hcl.carservicing.carservice.model.ServiceCenterServiceType;
 import com.hcl.carservicing.carservice.model.ServiceType;
-import com.hcl.carservicing.carservice.repository.ServiceCenterServiceTypeRepository;
 import com.hcl.carservicing.carservice.service.ServiceCenterServiceTypeService;
 
 @Service
@@ -34,7 +27,7 @@ public class ServiceCenterServiceTypeServiceImpl implements ServiceCenterService
     private final ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService;
     private final ServiceCenterDaoService serviceCenterDaoService;
 
-    public ServiceCenterServiceTypeServiceImpl(ServiceCenterServiceTypeRepository repository, ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService,
+    public ServiceCenterServiceTypeServiceImpl(ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService,
                                                ServiceTypeDaoService serviceTypeDaoService,
                                                ServiceCenterDaoService serviceCenterDaoService ) {
         this.serviceTypeDaoService = serviceTypeDaoService;

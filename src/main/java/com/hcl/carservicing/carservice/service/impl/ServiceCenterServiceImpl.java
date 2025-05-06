@@ -1,21 +1,16 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
 import com.hcl.carservicing.carservice.mapper.ServiceCenterMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.hcl.carservicing.carservice.dto.ServiceCenterDTO;
-import com.hcl.carservicing.carservice.dto.ServiceCenterServiceTypeDTO;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
-import com.hcl.carservicing.carservice.model.ServiceCenterServiceType;
-import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
 import com.hcl.carservicing.carservice.service.ServiceCenterService;
 
 @Service

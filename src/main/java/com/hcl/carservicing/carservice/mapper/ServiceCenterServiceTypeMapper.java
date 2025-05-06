@@ -2,7 +2,6 @@ package com.hcl.carservicing.carservice.mapper;
 
 import com.hcl.carservicing.carservice.dto.ServiceCenterServiceTypeDTO;
 import com.hcl.carservicing.carservice.model.ServiceCenterServiceType;
-import com.hcl.carservicing.carservice.service.ServiceCenterService;
 
 public class ServiceCenterServiceTypeMapper {
 

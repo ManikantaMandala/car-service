@@ -43,7 +43,7 @@ class ServiceTypeDtoTest {
         String serviceName = "Oil Change";
         String description = "Complete oil change service including filter replacement.";
 
-        ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
+        serviceTypeDTO = new ServiceTypeDTO();
         serviceTypeDTO.setId(id);
         serviceTypeDTO.setServiceName(serviceName);
         serviceTypeDTO.setDescription(description);
@@ -55,7 +55,7 @@ class ServiceTypeDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        ServiceTypeDTO serviceTypeDTO = new ServiceTypeDTO();
+        serviceTypeDTO = new ServiceTypeDTO();
         assertNull(serviceTypeDTO.getId());
         assertNull(serviceTypeDTO.getServiceName());
         assertNull(serviceTypeDTO.getDescription());

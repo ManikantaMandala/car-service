@@ -97,7 +97,7 @@ class ServicingRequestDtoTest {
 
     @Test
     void testEmptyConstructor() {
-        ServiceRequestDTO servicingRequestDTO = new ServiceRequestDTO();
+        servicingRequestDTO = new ServiceRequestDTO();
         assertNull(servicingRequestDTO.getId());
         assertNull(servicingRequestDTO.getStartDate());
         assertNull(servicingRequestDTO.getEndDate());

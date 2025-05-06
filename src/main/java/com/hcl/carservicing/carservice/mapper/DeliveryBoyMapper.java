@@ -1,7 +1,6 @@
 package com.hcl.carservicing.carservice.mapper;
 
 import com.hcl.carservicing.carservice.dto.DeliveryBoyDTO;
-import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
 import com.hcl.carservicing.carservice.model.DeliveryBoy;
 import com.hcl.carservicing.carservice.model.ServiceRequest;
 
@@ -19,7 +18,6 @@ public class DeliveryBoyMapper {
         return deliveryBoy;
     }
 
-    // TODO: to have the list of ids of service request implement other toDto()
     public static DeliveryBoyDTO toDto(DeliveryBoy deliveryBoy) {
         DeliveryBoyDTO deliveryBoyDTO = new DeliveryBoyDTO();
 

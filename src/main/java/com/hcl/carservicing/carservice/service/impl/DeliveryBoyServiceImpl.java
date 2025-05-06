@@ -1,23 +1,18 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.hcl.carservicing.carservice.dao.service.DeliveryBoyDaoService;
 import com.hcl.carservicing.carservice.dao.service.ServiceCenterDaoService;
 import com.hcl.carservicing.carservice.mapper.DeliveryBoyMapper;
-import com.hcl.carservicing.carservice.repository.ServiceCenterRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
-import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hcl.carservicing.carservice.dto.DeliveryBoyDTO;
 import com.hcl.carservicing.carservice.model.DeliveryBoy;
 import com.hcl.carservicing.carservice.model.ServiceCenter;
-import com.hcl.carservicing.carservice.repository.DeliveryBoyRepository;
 import com.hcl.carservicing.carservice.service.DeliveryBoyService;
 
 @Service
