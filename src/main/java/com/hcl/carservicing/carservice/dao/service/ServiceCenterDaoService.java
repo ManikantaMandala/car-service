@@ -8,4 +8,5 @@ public interface ServiceCenterDaoService {
     ServiceCenter findById(Long id);
     List<ServiceCenter> findAll();
     List<ServiceCenter> findByAvailable(Boolean available);
+    ServiceCenter save(ServiceCenter serviceCenter);
 }

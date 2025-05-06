@@ -1,13 +1,11 @@
 package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.Date;
-import java.util.Optional;
 
 import com.hcl.carservicing.carservice.config.CustomUserDetailsService;
 import com.hcl.carservicing.carservice.config.JwtUtil;
 import com.hcl.carservicing.carservice.dao.service.AppUserDaoService;
 import com.hcl.carservicing.carservice.dto.UserLoginDTO;
-import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
 import com.hcl.carservicing.carservice.mapper.AppUserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,25 +19,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hcl.carservicing.carservice.dto.AppUserDTO;
 import com.hcl.carservicing.carservice.model.AppUser;
-import com.hcl.carservicing.carservice.repository.AppUserRepository;
 import com.hcl.carservicing.carservice.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final AppUserRepository userRepository;
     private final AppUserDaoService appUserDaoService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public UserServiceImpl(AppUserRepository userRepository, AppUserDaoService appUserDaoService,
+    public UserServiceImpl(AppUserDaoService appUserDaoService,
                            JwtUtil jwtUtil,
                            CustomUserDetailsService customUserDetailsService,
                            PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
         this.appUserDaoService = appUserDaoService;
         this.jwtUtil = jwtUtil;
         this.customUserDetailsService = customUserDetailsService;

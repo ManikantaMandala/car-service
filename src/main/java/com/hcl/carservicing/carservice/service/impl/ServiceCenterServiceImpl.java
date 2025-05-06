@@ -23,12 +23,9 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ServiceCenterServiceImpl.class);
 
-    private final ServiceCenterRepository serviceCenterRepository;
     private final ServiceCenterDaoService serviceCenterDaoService;
 
-    public ServiceCenterServiceImpl(ServiceCenterRepository serviceCenterRepository,
-                                    ServiceCenterDaoService serviceCenterDaoService) {
-        this.serviceCenterRepository = serviceCenterRepository;
+    public ServiceCenterServiceImpl(ServiceCenterDaoService serviceCenterDaoService) {
         this.serviceCenterDaoService = serviceCenterDaoService;
     }
 
@@ -37,7 +34,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
     	logger.info("Creating service center with name: {}", serviceCenterDTO.getName());
         ServiceCenter serviceCenter = ServiceCenterMapper.convertToEntity(serviceCenterDTO);
 
-        ServiceCenter savedServiceCenter = serviceCenterRepository.save(serviceCenter);
+        ServiceCenter savedServiceCenter = serviceCenterDaoService.save(serviceCenter);
         logger.info("Service center created successfully with ID: {}", savedServiceCenter.getId());
     }
 
@@ -51,7 +48,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         serviceCenter.setRating(serviceCenterDTO.getRating());
         serviceCenter.setAvailable(serviceCenterDTO.getAvailable());
 
-        serviceCenterRepository.save(serviceCenter);
+        serviceCenterDaoService.save(serviceCenter);
         logger.info("updated the service center");
     }
 
@@ -89,7 +86,7 @@ public class ServiceCenterServiceImpl implements ServiceCenterService {
         ServiceCenter serviceCenter = serviceCenterDaoService.findById(id);
         serviceCenter.setAvailable(status);
 
-        serviceCenterRepository.save(serviceCenter);
+        serviceCenterDaoService.save(serviceCenter);
         logger.info("Service center status updated successfully with ID: {}", id);
     }
 

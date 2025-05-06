@@ -41,4 +41,9 @@ public class ServiceCenterDaoServiceImpl implements ServiceCenterDaoService {
     public List<ServiceCenter> findByAvailable(Boolean available) {
         return serviceCenterRepository.findByAvailable(available);
     }
+
+    @Override
+    public ServiceCenter save(ServiceCenter serviceCenter) {
+        return serviceCenterRepository.save(serviceCenter);
+    }
 }

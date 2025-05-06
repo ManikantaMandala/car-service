@@ -40,7 +40,6 @@ class ServiceCenterServiceTypeServiceImplTest {
     @InjectMocks
     ServiceCenterServiceTypeServiceImpl serviceCenterServiceTypeService;
 
-
     private ServiceCenterServiceTypeDTO createSampleDTO() {
         ServiceCenterServiceTypeDTO dto = new ServiceCenterServiceTypeDTO();
         dto.setId(1L);

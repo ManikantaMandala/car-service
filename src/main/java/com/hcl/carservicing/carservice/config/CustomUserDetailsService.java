@@ -1,5 +1,6 @@
 package com.hcl.carservicing.carservice.config;
 
+import com.hcl.carservicing.carservice.dao.service.AppUserDaoService;
 import com.hcl.carservicing.carservice.model.AppUser;
 import com.hcl.carservicing.carservice.repository.AppUserRepository;
 import org.slf4j.Logger;
@@ -23,21 +24,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private final AppUserRepository userRepository;
+    private final AppUserDaoService appUserDaoService;
 
-    public CustomUserDetailsService(AppUserRepository userRepository) {
+    public CustomUserDetailsService(
+            AppUserRepository userRepository,
+                                    AppUserDaoService appUserDaoService) {
         this.userRepository = userRepository;
+        this.appUserDaoService = appUserDaoService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AppUser> userOptional= userRepository.findByUsername(username);
+        AppUser user = appUserDaoService.findByUsername(username);
 
-        if (userOptional.isEmpty()) {
-            logger.warn("User not found");
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        AppUser user = userOptional.get();
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(user.getRole().toString());
 
         return new User(user.getUsername(), user.getPassword(), authorities);
