@@ -32,6 +32,8 @@ class AdminRequestControllerTest {
 	@InjectMocks
 	AdminRequestController adminRequestController;
 
+	private String reason;
+
 	@Test
 	void updateStatusWithOkStatus() {
 		Long requestId = 1L;
@@ -44,6 +46,8 @@ class AdminRequestControllerTest {
 		LocalDate startDate = LocalDate.now();
 		LocalDate endDate = startDate.plusDays(2);
 
+		reason = "reason";
+
 		ServiceRequestDTO serviceRequestDTO = new ServiceRequestDTO();
 		serviceRequestDTO.setId(requestId);
 		serviceRequestDTO.setStatus(status);
@@ -54,16 +58,16 @@ class AdminRequestControllerTest {
 		serviceRequestDTO.setServiceCenterId(serviceCenterId);
 		serviceRequestDTO.setDeliveryBoyId(deliveryBoyId);
 
-		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId, reason))
 				.thenReturn(serviceRequestDTO);
 
-		ResponseEntity<String> result = adminRequestController.updateStatus(requestId, status, deliveryBoyId);
+		ResponseEntity<String> result = adminRequestController.updateStatus(requestId, status, deliveryBoyId, reason);
 
 		assertNotNull(result);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertEquals("Servicing request status updated successfully", result.getBody());
 		verify(serviceRequestService, times(1))
-				.updateRequestStatus(requestId, status, deliveryBoyId);
+				.updateRequestStatus(requestId, status, deliveryBoyId, reason);
 	}
 
 	@Test
@@ -71,16 +75,17 @@ class AdminRequestControllerTest {
 		Long requestId = 100L;
 		RequestStatus status = RequestStatus.ACCEPTED;
 		Long deliveryBoyId = 1L;
+		reason = "reason";
 
-		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId, reason))
 				.thenThrow(new ElementNotFoundException("Request not found: " + requestId));
 
 		ElementNotFoundException thrownException = assertThrows(ElementNotFoundException.class,
-				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId));
+				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId, reason));
 
 		assertEquals("Request not found: " + requestId, thrownException.getMessage());
 		verify(serviceRequestService, times(1))
-				.updateRequestStatus(requestId, status, deliveryBoyId);
+				.updateRequestStatus(requestId, status, deliveryBoyId, reason);
 	}
 
 	@Test
@@ -88,16 +93,17 @@ class AdminRequestControllerTest {
 		Long requestId = 100L;
 		RequestStatus status = RequestStatus.ACCEPTED;
 		Long deliveryBoyId = 1L;
+		reason = "reason";
 
-		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId))
+		when(serviceRequestService.updateRequestStatus(requestId, status, deliveryBoyId, reason))
 				.thenThrow(new ElementNotFoundException("Delivery boy not found: " + deliveryBoyId));
 
 		ElementNotFoundException thrownException = assertThrows(ElementNotFoundException.class,
-				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId));
+				() -> adminRequestController.updateStatus(requestId, status, deliveryBoyId, reason));
 
 		assertEquals("Delivery boy not found: " + deliveryBoyId, thrownException.getMessage());
 		verify(serviceRequestService, times(1))
-				.updateRequestStatus(requestId, status, deliveryBoyId);
+				.updateRequestStatus(requestId, status, deliveryBoyId, reason);
 	}
 
 	@Test

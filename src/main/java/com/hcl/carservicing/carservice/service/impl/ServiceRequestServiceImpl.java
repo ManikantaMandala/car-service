@@ -95,7 +95,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
     @Override
     @Transactional
-    public ServiceRequestDTO updateRequestStatus(Long requestId, RequestStatus status, Long deliveryBoyId) {
+    public ServiceRequestDTO updateRequestStatus(Long requestId, RequestStatus status, Long deliveryBoyId, String message) {
     	logger.info("Updating status of servicing request with ID: {}", requestId);
     	ServiceRequest existing = serviceRequestDaoService.findById(requestId);
 
@@ -109,8 +109,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             existing.setDeliveryBoy(deliveryBoy);
         }
 
-        // TODO: if rejected how does user knows the reason of rejecting, think of this problem
         existing.setStatus(status);
+        if (status == RequestStatus.REJECTED) {
+            existing.setReason("");
+        }
 
         ServiceRequest updatedRequest = serviceRequestDaoService.save(existing);
         logger.info("Servicing request status updated successfully with ID: {} in updateRequestStatus", updatedRequest.getId());

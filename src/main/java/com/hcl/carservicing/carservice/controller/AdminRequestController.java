@@ -36,9 +36,10 @@ public class AdminRequestController {
     public ResponseEntity<String> updateStatus(
             @PathVariable Long id,
             @RequestParam RequestStatus status,
-            @RequestParam(required = false) Long deliveryBoyId) {
+            @RequestParam(required = false) Long deliveryBoyId,
+            @RequestParam(required = false) String message) {
         logger.info("Updating status of servicing request with ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
-        serviceRequestService.updateRequestStatus(id, status, deliveryBoyId);
+        serviceRequestService.updateRequestStatus(id, status, deliveryBoyId, message);
 
         logger.info("Servicing request status updated successfully for ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
         return ResponseEntity.ok("Servicing request status updated successfully");
