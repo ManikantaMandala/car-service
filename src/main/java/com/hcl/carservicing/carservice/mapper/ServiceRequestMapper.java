@@ -16,6 +16,7 @@ public class ServiceRequestMapper {
         serviceRequestDto.setUsername(serviceRequest.getUser().getUsername());
         serviceRequestDto.setServiceId(serviceRequest.getService().getId());
         serviceRequestDto.setServiceCenterId(serviceRequest.getServiceCenter().getId());
+        serviceRequestDto.setVehicleName(serviceRequest.getVehicleDetails().getVehicleName());
 
         if (serviceRequest.getDeliveryBoy() != null) {
             serviceRequestDto.setDeliveryBoyId(serviceRequest.getDeliveryBoy().getId());

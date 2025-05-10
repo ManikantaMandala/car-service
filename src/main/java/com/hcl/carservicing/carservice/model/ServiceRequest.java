@@ -14,38 +14,42 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "servicing_request")
 public class ServiceRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
-    @NotNull(message = "Start date is required")
-    @FutureOrPresent(message = "Please enter the date which is greater than previous day’s date")
-    private LocalDate startDate;
-    
-    @NotNull(message = "End date is required")
-    @FutureOrPresent(message = "Please enter the date which is greater than start date")
-    private LocalDate endDate;
+	@NotNull(message = "Start date is required")
+	@FutureOrPresent(message = "Please enter the date which is greater than previous day’s date")
+	private LocalDate startDate;
 
-    @Enumerated(EnumType.STRING)
-    private RequestStatus status;
+	@NotNull(message = "End date is required")
+	@FutureOrPresent(message = "Please enter the date which is greater than start date")
+	private LocalDate endDate;
 
- 	@ManyToOne
- 	@NotNull(message = "Username is mandaory")
- 	private AppUser user;
+	@Enumerated(EnumType.STRING)
+	private RequestStatus status;
 
- 	@ManyToOne
- 	private DeliveryBoy deliveryBoy;
+	@ManyToOne
+	@NotNull(message = "Username is mandaory")
+	private AppUser user;
 
- 	@ManyToOne
- 	@NotNull(message = "ServiceCenterServiceType Id is mandaory")
- 	private ServiceCenterServiceType service;
+	@ManyToOne
+	private DeliveryBoy deliveryBoy;
 
- 	@ManyToOne
- 	private ServiceCenter serviceCenter;
-    
+	@ManyToOne
+	@NotNull(message = "ServiceCenterServiceType Id is mandaory")
+	private ServiceCenterServiceType service;
+
+	@ManyToOne
+	private ServiceCenter serviceCenter;
+
+	@ManyToOne
+	@NotNull(message = "Vehicle details are missing")
+	private VehicleDetails vehicleDetails;
+
 	public Long getId() {
 		return id;
 	}
@@ -116,6 +120,14 @@ public class ServiceRequest {
 
 	public void setServiceCenter(ServiceCenter serviceCenter) {
 		this.serviceCenter = serviceCenter;
+	}
+
+	public VehicleDetails getVehicleDetails() {
+		return vehicleDetails;
+	}
+
+	public void setVehicleDetails(VehicleDetails vehicleDetails) {
+		this.vehicleDetails = vehicleDetails;
 	}
 }
 

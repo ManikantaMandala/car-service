@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public class AppUserDTO {
 
     @NotBlank(message = "First Name is mandatory")

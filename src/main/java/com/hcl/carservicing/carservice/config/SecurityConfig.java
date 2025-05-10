@@ -41,25 +41,26 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
                         ).permitAll()
+//
+//                        .requestMatchers(
+//                                "/api/admin/**",
+//                                "/api/service-centers/**",
+//                                "/api/servicing-request",
+//                                "/api/delivery-boys/**",
+//                                "/api/service-center-services/**"
+//                        ).hasAuthority("ADMIN")
+//
+//                        .requestMatchers("/api/user/**",
+//                                "/api/service-types/getAll",
+//                                "/api/service-types/getById/",
+//                                "/api/service-center-services/byServiceType/",
+//                                "api/service-center-services/byCenter/",
+//                                "api/service-centers/getAllServiceCenters",
+//                                "api/service-centers/getAvailableServiceCenters",
+//                                "api/service-centers/getServiceCenterById/").hasAuthority("USER")
 
-                        .requestMatchers(
-                                "/api/admin/**",
-                                "/api/service-centers/**",
-                                "/api/servicing-request",
-                                "/api/delivery-boys/**",
-                                "/api/service-center-services/**"
-                        ).hasAuthority("ADMIN")
-
-                        .requestMatchers("/api/user/**",
-                                "/api/service-types/getAll",
-                                "/api/service-types/getById/",
-                                "/api/service-center-services/byServiceType/",
-                                "api/service-center-services/byCenter/",
-                                "api/service-centers/getAllServiceCenters",
-                                "api/service-centers/getAvailableServiceCenters",
-                                "api/service-centers/getServiceCenterById/").hasAuthority("USER")
-
-                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
+//                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

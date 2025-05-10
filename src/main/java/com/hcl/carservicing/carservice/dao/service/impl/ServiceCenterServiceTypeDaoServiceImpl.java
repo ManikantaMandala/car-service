@@ -25,8 +25,8 @@ public class ServiceCenterServiceTypeDaoServiceImpl implements ServiceCenterServ
     public ServiceCenterServiceType findById(Long id) {
         Optional<ServiceCenterServiceType> serviceCenterServiceTypeOptional = serviceCenterServiceTypeRepository.findById(id);
         if (serviceCenterServiceTypeOptional.isEmpty()) {
-            logger.error("ServiceCenterServiceType not found with ID: {}", id);
-            throw new ElementNotFoundException("ServiceCenterServiceType not found: " + id);
+            logger.error("service type not found in service center with id: {}", id);
+            throw new ElementNotFoundException("service type not found in service center with id: " + id);
         }
 
         return serviceCenterServiceTypeOptional.get();

@@ -14,7 +14,11 @@ import java.util.Optional;
 @Service
 public class ServiceCenterDaoServiceImpl implements ServiceCenterDaoService {
     private static final Logger logger = LoggerFactory.getLogger(ServiceCenterDaoServiceImpl.class);
-    private ServiceCenterRepository serviceCenterRepository;
+    private final ServiceCenterRepository serviceCenterRepository;
+
+    public ServiceCenterDaoServiceImpl(ServiceCenterRepository serviceCenterRepository) {
+        this.serviceCenterRepository = serviceCenterRepository;
+    }
 
     @Override
     public ServiceCenter findById(Long id) {

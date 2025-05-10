@@ -2,12 +2,10 @@ package com.hcl.carservicing.carservice.service.impl;
 
 import java.util.List;
 
-import com.hcl.carservicing.carservice.dao.service.AppUserDaoService;
-import com.hcl.carservicing.carservice.dao.service.DeliveryBoyDaoService;
-import com.hcl.carservicing.carservice.dao.service.ServiceCenterServiceTypeDaoService;
-import com.hcl.carservicing.carservice.dao.service.ServiceRequestDaoService;
+import com.hcl.carservicing.carservice.dao.service.*;
 import com.hcl.carservicing.carservice.dao.strategy.DeliveryBoyAllocationStrategy;
 import com.hcl.carservicing.carservice.mapper.ServiceRequestMapper;
+import com.hcl.carservicing.carservice.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,10 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hcl.carservicing.carservice.dto.ServiceRequestDTO;
 import com.hcl.carservicing.carservice.enums.RequestStatus;
-import com.hcl.carservicing.carservice.model.AppUser;
-import com.hcl.carservicing.carservice.model.DeliveryBoy;
-import com.hcl.carservicing.carservice.model.ServiceCenterServiceType;
-import com.hcl.carservicing.carservice.model.ServiceRequest;
 import com.hcl.carservicing.carservice.service.ServiceRequestService;
 
 @Service
@@ -30,18 +24,21 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private final DeliveryBoyDaoService deliveryBoyDaoService;
     private final ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService;
     private final DeliveryBoyAllocationStrategy deliveryBoyAllocationStrategy;
+    private final VehicleDetailsDaoService vehicleDetailsDaoService;
 
     public ServiceRequestServiceImpl(AppUserDaoService appUserDaoService,
                                      ServiceRequestDaoService serviceRequestDaoService,
                                      DeliveryBoyDaoService deliveryBoyDaoService,
                                      ServiceCenterServiceTypeDaoService serviceCenterServiceTypeDaoService,
-                                     DeliveryBoyAllocationStrategy deliveryBoyAllocationStrategy) {
+                                     DeliveryBoyAllocationStrategy deliveryBoyAllocationStrategy,
+                                     VehicleDetailsDaoService vehicleDetailsDaoService) {
 
         this.appUserDaoService = appUserDaoService;
         this.serviceRequestDaoService = serviceRequestDaoService;
         this.deliveryBoyDaoService = deliveryBoyDaoService;
         this.serviceCenterServiceTypeDaoService = serviceCenterServiceTypeDaoService;
         this.deliveryBoyAllocationStrategy = deliveryBoyAllocationStrategy;
+        this.vehicleDetailsDaoService = vehicleDetailsDaoService;
     }
 
     @Override
@@ -58,6 +55,10 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         request.setService(service);
         request.setServiceCenter(service.getServiceCenter());
 
+        VehicleDetails vehicleDetails = new VehicleDetails(user, requestDTO.getVehicleName());
+        vehicleDetailsDaoService.save(vehicleDetails);
+        request.setVehicleDetails(vehicleDetails);
+
         if (requestDTO.getDeliveryBoyId() != null) {
             DeliveryBoy deliveryBoy = deliveryBoyDaoService.findById(requestDTO.getDeliveryBoyId());
             request.setDeliveryBoy(deliveryBoy);
@@ -72,6 +73,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     public List<ServiceRequestDTO> getRequestsByUser(String username) {
     	logger.info("Fetching servicing requests for user: {}", username);
     	List<ServiceRequest> serviceRequests = serviceRequestDaoService.findByUserUsername(username);
+        logger.debug(serviceRequests.toString());
 
     	logger.info("Fetched {} servicing requests for user: {}", serviceRequests.size(), username);
     	return serviceRequests.stream().map(ServiceRequestMapper::toDto).toList();

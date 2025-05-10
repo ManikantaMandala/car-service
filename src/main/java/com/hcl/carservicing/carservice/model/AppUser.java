@@ -21,7 +21,7 @@ import jakarta.validation.constraints.Size;
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long user_id;
+	private Long id;
 
     @NotBlank(message = "First Name is mandatory")
     @Size(min = 2, max = 50, message = "First Name must be between 2 and 50 characters")
@@ -54,20 +54,32 @@ public class AppUser {
     @NotNull(message = "Role is mandatory")
     @Enumerated(EnumType.STRING)
     private UserRole role;
-    
-    @CreationTimestamp
+
+	@CreationTimestamp
     private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "user",fetch = FetchType.EAGER,
-		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "user",
+		fetch = FetchType.EAGER,
+		cascade = {
+			CascadeType.PERSIST, CascadeType.MERGE
+		}
+	)
 	private List<ServiceRequest> serviceRequests;
 
+	@OneToMany(mappedBy = "appUser",
+		fetch = FetchType.EAGER,
+		cascade = {
+			CascadeType.PERSIST, CascadeType.MERGE
+		}
+	)
+	private List<VehicleDetails> vehicleDetails;
+
 	public Long getId() {
-		return user_id;
+		return id;
 	}
 
 	public void setId(Long id) {
-		this.user_id = id;
+		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -150,10 +162,18 @@ public class AppUser {
 		this.serviceRequests = serviceRequests;
 	}
 
+	public List<VehicleDetails> getVehicleDetails() {
+		return vehicleDetails;
+	}
+
+	public void setVehicleDetails(List<VehicleDetails> vehicleDetails) {
+		this.vehicleDetails = vehicleDetails;
+	}
+
 	@Override
 	public String toString() {
 		return "AppUser{" +
-				"user_id=" + user_id +
+				"user_id=" + id +
 				", firstName='" + firstName + '\'' +
 				", lastName='" + lastName + '\'' +
 				", age=" + age +

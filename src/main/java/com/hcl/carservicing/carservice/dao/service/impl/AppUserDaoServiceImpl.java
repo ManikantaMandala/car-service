@@ -4,11 +4,13 @@ import com.hcl.carservicing.carservice.dao.service.AppUserDaoService;
 import com.hcl.carservicing.carservice.exception.ElementAlreadyExistException;
 import com.hcl.carservicing.carservice.exception.ElementNotFoundException;
 import com.hcl.carservicing.carservice.model.AppUser;
+import com.hcl.carservicing.carservice.model.VehicleDetails;
 import com.hcl.carservicing.carservice.repository.AppUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +50,17 @@ public class AppUserDaoServiceImpl implements AppUserDaoService {
             logger.error("User found with contact number: {}", contactNumber);
             throw new ElementAlreadyExistException("User found with contact number: " + contactNumber);
         }
+    }
+
+    public void addVehicleDetailsToUser(String username, VehicleDetails vehicleDetails) {
+        AppUser appUser = findByUsername(username);
+
+        List<VehicleDetails> vehicleDetailsList = appUser.getVehicleDetails();
+        vehicleDetailsList.add(vehicleDetails);
+
+        appUser.setVehicleDetails(vehicleDetailsList);
+
+        save(appUser);
     }
 
     @Override
