@@ -47,6 +47,7 @@ class ServiceRequestServiceImplTest {
     private DeliveryBoy deliveryBoy;
     private ServiceCenterServiceType serviceCenterServiceType;
     private ServiceCenter serviceCenter;
+    private String reason;
 
     @BeforeEach
     void setUp() {
@@ -139,11 +140,13 @@ class ServiceRequestServiceImplTest {
 
     @Test
     void testUpdateRequestStatus() {
+        reason = "reason";
+
         when(serviceRequestDaoService.findById(1L)).thenReturn(serviceRequest);
         when(deliveryBoyDaoService.findById(1L)).thenReturn(deliveryBoy);
         when(serviceRequestDaoService.save(any(ServiceRequest.class))).thenReturn(serviceRequest);
 
-        ServiceRequestDTO result = serviceRequestService.updateRequestStatus(1L, RequestStatus.ACCEPTED, 1L);
+        ServiceRequestDTO result = serviceRequestService.updateRequestStatus(1L, RequestStatus.ACCEPTED, 1L, reason);
 
         assertEquals(RequestStatus.ACCEPTED, result.getStatus());
         verify(serviceRequestDaoService, times(1)).save(any(ServiceRequest.class));
@@ -152,21 +155,25 @@ class ServiceRequestServiceImplTest {
     @Test
     void testUpdateRequestStatus_RequestNotFound() {
         id = 1L;
+        reason = "reason";
+
         doThrow(ElementNotFoundException.class).when(serviceRequestDaoService).findById(id);
 
         assertThrows(ElementNotFoundException.class, () -> {
-            serviceRequestService.updateRequestStatus(id, RequestStatus.ACCEPTED, id);
+            serviceRequestService.updateRequestStatus(id, RequestStatus.ACCEPTED, id, reason);
         });
     }
 
     @Test
     void testUpdateRequestStatus_DeliveryBoyNotFound() {
         id = 1L;
+        reason = "reason";
+
         when(serviceRequestDaoService.findById(1L)).thenReturn(serviceRequest);
         doThrow(ElementNotFoundException.class).when(deliveryBoyDaoService).findById(id);
 
         assertThrows(ElementNotFoundException.class, () -> {
-            serviceRequestService.updateRequestStatus(1L, RequestStatus.ACCEPTED, 1L);
+            serviceRequestService.updateRequestStatus(1L, RequestStatus.ACCEPTED, 1L, reason);
         });
     }
 

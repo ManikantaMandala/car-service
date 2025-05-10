@@ -18,7 +18,7 @@ import com.hcl.carservicing.carservice.service.ServiceCenterService;
 import com.hcl.carservicing.carservice.service.ServiceRequestService;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminRequestController.class);
@@ -32,19 +32,20 @@ public class AdminRequestController {
         this.serviceCenterService = serviceCenterService;
     }
 
-    @PutMapping("/updateServiceRequestStatus/{id}")
+    @PutMapping("/service-request-status/{id}")
     public ResponseEntity<String> updateStatus(
             @PathVariable Long id,
             @RequestParam RequestStatus status,
-            @RequestParam(required = false) Long deliveryBoyId) {
+            @RequestParam(required = false) Long deliveryBoyId,
+            @RequestParam(required = false) String message) {
         logger.info("Updating status of servicing request with ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
-        serviceRequestService.updateRequestStatus(id, status, deliveryBoyId);
+        serviceRequestService.updateRequestStatus(id, status, deliveryBoyId, message);
 
         logger.info("Servicing request status updated successfully for ID: {}, Status: {}, DeliveryBoyId: {}", id, status, deliveryBoyId);
         return ResponseEntity.ok("Servicing request status updated successfully");
     }
 
-    @GetMapping("/getAllServiceRequests")
+    @GetMapping("/service-requests")
     public ResponseEntity<List<ServiceRequestDTO>> getAll() {
         logger.info("Fetching all servicing requests");
         List<ServiceRequestDTO> list = serviceRequestService.getAllRequests();
@@ -53,7 +54,7 @@ public class AdminRequestController {
         return ResponseEntity.ok(list);
     }
 
-    @PutMapping("/updateServiceCenterStatus")
+    @PutMapping("/service-center-status")
     public ResponseEntity<String> updateStatusOfServiceCenter(
             @RequestParam Long id,
             @RequestParam Boolean status) {

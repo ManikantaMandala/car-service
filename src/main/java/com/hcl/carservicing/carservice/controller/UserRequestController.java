@@ -19,7 +19,7 @@ import com.hcl.carservicing.carservice.service.ServiceRequestService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/servicing-request")
+@RequestMapping("/api/v1/service-request")
 public class UserRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRequestController.class);
@@ -30,7 +30,7 @@ public class UserRequestController {
         this.service = service;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<String> createRequest(@Valid @RequestBody ServiceRequestDTO requestDTO) {
         logger.info("Creating new servicing request with details: {}", requestDTO);
         service.createRequest(requestDTO);

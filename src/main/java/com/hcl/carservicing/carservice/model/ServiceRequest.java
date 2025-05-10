@@ -12,7 +12,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "servicing_request")
+@Table(name = "service_request")
 public class ServiceRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +49,8 @@ public class ServiceRequest {
 	@ManyToOne
 	@NotNull(message = "Vehicle details are missing")
 	private VehicleDetails vehicleDetails;
+
+	private String reason = "our request is accepted";
 
 	public Long getId() {
 		return id;
@@ -128,6 +130,14 @@ public class ServiceRequest {
 
 	public void setVehicleDetails(VehicleDetails vehicleDetails) {
 		this.vehicleDetails = vehicleDetails;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }
 

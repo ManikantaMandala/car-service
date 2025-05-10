@@ -20,7 +20,7 @@ public interface ServiceRequestService {
     /**
      * Admin: update status and optionally assign a delivery boy
      */
-    ServiceRequestDTO updateRequestStatus(Long requestId, RequestStatus status, Long deliveryBoyId);
+    ServiceRequestDTO updateRequestStatus(Long requestId, RequestStatus status, Long deliveryBoyId, String message);
 
     /**
      * Admin: fetch all requests
