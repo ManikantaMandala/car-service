@@ -20,7 +20,7 @@ import com.hcl.carservicing.carservice.service.DeliveryBoyService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/delivery-boys")
+@RequestMapping("/api/v1/delivery-boys")
 public class DeliveryBoyController {
     private static final Logger logger = LoggerFactory.getLogger(DeliveryBoyController.class);
 
@@ -30,7 +30,7 @@ public class DeliveryBoyController {
         this.deliveryBoyService = deliveryBoyService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody DeliveryBoyDTO deliveryBoyDTO) {
         logger.info("Creating new delivery boy with details: {}", deliveryBoyDTO);
         deliveryBoyService.createDeliveryBoy(deliveryBoyDTO);
@@ -40,7 +40,7 @@ public class DeliveryBoyController {
 
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id,
                                          @Valid @RequestBody DeliveryBoyDTO deliveryBoyDTO) {
         logger.info("Updating delivery boy with ID: {}, New details: {}", id, deliveryBoyDTO);
@@ -66,5 +66,12 @@ public class DeliveryBoyController {
 
         logger.info("Fetched {} available delivery boys", list.size());
         return ResponseEntity.ok(list);
+    }
+
+    // TODO: get available delivery boys of a service center
+    @GetMapping("/available/center/{centerId}")
+    public ResponseEntity<List<DeliveryBoyDTO>> availableDeliveryBoyForACenter() {
+
+        return null;
     }
 }

@@ -18,7 +18,7 @@ import com.hcl.carservicing.carservice.service.ServiceCenterService;
 import com.hcl.carservicing.carservice.service.ServiceRequestService;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminRequestController.class);
@@ -32,7 +32,7 @@ public class AdminRequestController {
         this.serviceCenterService = serviceCenterService;
     }
 
-    @PutMapping("/updateServiceRequestStatus/{id}")
+    @PutMapping("/service-request-status/{id}")
     public ResponseEntity<String> updateStatus(
             @PathVariable Long id,
             @RequestParam RequestStatus status,
@@ -45,7 +45,7 @@ public class AdminRequestController {
         return ResponseEntity.ok("Servicing request status updated successfully");
     }
 
-    @GetMapping("/getAllServiceRequests")
+    @GetMapping("/service-requests")
     public ResponseEntity<List<ServiceRequestDTO>> getAll() {
         logger.info("Fetching all servicing requests");
         List<ServiceRequestDTO> list = serviceRequestService.getAllRequests();
@@ -54,7 +54,7 @@ public class AdminRequestController {
         return ResponseEntity.ok(list);
     }
 
-    @PutMapping("/updateServiceCenterStatus")
+    @PutMapping("/service-center-status")
     public ResponseEntity<String> updateStatusOfServiceCenter(
             @RequestParam Long id,
             @RequestParam Boolean status) {

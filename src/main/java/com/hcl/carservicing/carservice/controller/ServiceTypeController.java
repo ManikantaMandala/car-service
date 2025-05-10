@@ -20,7 +20,7 @@ import com.hcl.carservicing.carservice.service.ServiceTypeService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/service-types")
+@RequestMapping("/api/v1/service-types")
 public class ServiceTypeController {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceTypeController.class);
@@ -31,7 +31,7 @@ public class ServiceTypeController {
         this.serviceTypeService = serviceTypeService;
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody ServiceTypeDTO serviceTypeDTO) {
         logger.info("Creating new service type with details: {}", serviceTypeDTO);
         serviceTypeService.createServiceType(serviceTypeDTO);
@@ -41,7 +41,7 @@ public class ServiceTypeController {
                 .body("Service type created successfully");
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id,
                                          @Valid @RequestBody ServiceTypeDTO serviceTypeDTO) {
         logger.info("Updating service type with ID: {}, New details: {}", id, serviceTypeDTO);
@@ -51,7 +51,7 @@ public class ServiceTypeController {
         return ResponseEntity.ok("Service type updated successfully");
     }
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ServiceTypeDTO> getById(@PathVariable Long id) {
         logger.info("Fetching service type with ID: {}", id);
         ServiceTypeDTO result = serviceTypeService.getServiceTypeById(id);
@@ -60,7 +60,7 @@ public class ServiceTypeController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<List<ServiceTypeDTO>> getAll() {
         logger.info("Fetching all service types");
         List<ServiceTypeDTO> list = serviceTypeService.getAllServiceTypes();
