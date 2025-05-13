@@ -50,7 +50,7 @@ public class ServiceRequest {
 	@NotNull(message = "Vehicle details are missing")
 	private VehicleDetails vehicleDetails;
 
-	private String reason = "our request is accepted";
+	private String reason = "our request is pending";
 
 	public Long getId() {
 		return id;

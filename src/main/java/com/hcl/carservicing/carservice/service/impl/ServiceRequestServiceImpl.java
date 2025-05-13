@@ -113,7 +113,9 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
 
         existing.setStatus(status);
         if (status == RequestStatus.REJECTED) {
-            existing.setReason("");
+            existing.setReason(message);
+        } else if (status == RequestStatus.ACCEPTED) {
+            existing.setReason("Your request is accepted");
         }
 
         ServiceRequest updatedRequest = serviceRequestDaoService.save(existing);
